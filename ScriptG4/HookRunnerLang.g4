@@ -1,0 +1,17 @@
+grammar HookRunnerLang;
+IF: 'IF';
+WS:[ \t\r\n]+ -> skip;
+NAME: [a-zA-Z_]+;
+CONDITION_OPERATOR: '>' | '<' | '>=' | '<=' | '==';
+THEN: 'Then';
+END: 'End';
+fragment EMPTY: ' ';
+start: Sentence;
+Sentence: ((Condition | Command) ';') + ;
+Number: ('0' | [1-9][0-9]*);
+String: '"' .*? '"';
+Value: String | Number;
+Variable: NAME;
+Condition: IF '[' (Variable | Value) CONDITION_OPERATOR (Variable | Value) ']' THEN Sentence END;
+Args: ((NAME ',')* NAME | EMPTY);
+Command: NAME '(' Args ')';

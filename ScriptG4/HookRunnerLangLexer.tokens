@@ -1,0 +1,17 @@
+IF=1
+WS=2
+NAME=3
+CONDITION_OPERATOR=4
+THEN=5
+END=6
+Sentence=7
+Number=8
+String=9
+Value=10
+Variable=11
+Condition=12
+Args=13
+Command=14
+'IF'=1
+'Then'=5
+'End'=6
