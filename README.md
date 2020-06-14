@@ -22,7 +22,7 @@ Hook Runner is a more strict tight framework, emphasizing DSL and C libraries to
 - Due to using C based library interaction - The inner core logic is faster, safer and stronger.
 - Easy to montior compared to bash - In case of errors. Very easy to find code owner to speed up problem fixing.
 ### Cons
-- Commands require pre-comipliation
-- Python is not the fastest in the world, so some functionallity might be slawer compared to bash.
+- Commands require pre-compilation
+- Python is not the fastest in the world, so some functionallity might be slower compared to bash.
 - DSL to initiate command running might be limited.
 
