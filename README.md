@@ -11,7 +11,8 @@ This is very annoying If you need to supply distribution services which is const
 Hook Runner is a more strict tight framework, emphasizing DSL and C libraries to create a balance between capability and saftey, written in python. 
 
 ## Flaw Chart:
-<To Be Added>
+[Flow Chart Here](https://github.com/eladch156/HookRunner/blob/master/HookRunner.png?raw=true)
+
   
 ## Tutorial / Instructions 
 <To Be Added>
