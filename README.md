@@ -28,3 +28,5 @@ Hook Runner is a more strict tight framework, emphasizing DSL and C libraries to
 - Python is not the fastest in the world, so some functionallity might be slower compared to bash.
 - DSL to initiate command running might be limited.
 
+# License, Credits
+- Antlr4
