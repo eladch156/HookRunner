@@ -1,6 +1,13 @@
 from enum import Enum
 from Utils.Singleton import Singleton
+from Env.EnvSingleton import Environment
 from ctypes import *
+import logging
+from App.Logger import Logger
+from Utils.Exceptions import GeneralException,ErrorCodes
+import json
+from xml.etree import ElementTree
+from json import JSONEncoder
 
 class VarTypes(Enum):
     INT=1
@@ -28,25 +35,75 @@ def getLibCmd(lib, funcname, restype, argtypes):
 
 class LibsSingleton(metaclass=Singleton):
     def __init__(self):
-        self._mapNameToLibInstance = {}
-    def libOpen(self, name, path):
-        self._mapNameToLibInstance[name] = WinDLL(str(path))
+        self._envSingleton = Environment()
+        self._libCfgReader = None
+    def __setitem__(self, key, value):
+        raise GeneralException(ErrorCodes.CANT_EDIT_SPEC_FILE, "Cannot edit lib spec file.")
+    def __getitem__(self, key):
+        pass
+    def init(self):
+        self._libCfgReader = LibConfigFileReader(self._envSingleton['lib_spec_file'])
+        self._libCfgReader.read()
+        
+
+def ApiCommandToJson(JSONEncoder):
+    def default(self, apiCommand):
+        return apiCommand.__str__()
+
 
 class ApiCommand():
-    def __init__(self, libName, funcName):
+    def __init__(self, libPath, funcName):
         self._funcName = funcName
-        self._libName = libName
+        self._libPath = libPath
         self._retType = None
         self._argsTypeList = []
-        self._libSingleton = LibsSingleton()
     def setReturnType(self, typ):
         self._retType = typ
     def addArgument(self, arg): # arg = (Name, Type)        
         self._argsTypeList.append(arg)
     def run(self, *args):
-        function = getLibCmd(self._libSingleton[self._libName], self._funcName, self._retType, self._argsTypeList)
+        function = getLibCmd(WinDLL(str(self._libPath)), self._funcName, self._retType, self._argsTypeList)
         return function(args)
+    def __str__(self):
+        return "Library={},Function={} {}({})".format(self._libPath,self._retType,self._funcName,",".join(self._argsTypeList))
+
+
+class LibConfigFileReader():
+    def __init__(self, path):
+        self._cfgPath = path
+        self._cmds = {}
+        self._logger = Logger()
+    def read(self):
+        root = ElementTree.parse(self._cfgPath).getroot()
+        for lib in root:
+            specReader = LibSpecReader(lib.attrib['SpecPath'])
+            self._cmds[lib.attrib['Name']] = specReader.read()
+        self._logger.log(logging.DEBUG, str(self))
+    def serialize(self):
+        serializedCmds = {}
+        for lib in self._cmds:
+            serializedCmds[lib] = {}
+            for apiCmd in self._cmds[lib]:
+                serializedCmds[lib][apiCmd] = str(self._cmds[lib][apiCmd])
+        return serializedCmds
+    def __str__(self):
+        return json.dumps(self.serialize(),indent=4)
+
 
 class LibSpecReader():
-    def __init__(self):
-        pass
+    def __init__(self, path):
+        self._specPath = path
+    def read(self):
+        cmds = {}
+        root = ElementTree.parse(self._specPath).getroot()
+        libFile = root.attrib['LibFile']
+        for function in root:
+            funcName = function.attrib['Name']
+            cmd = ApiCommand(libFile, funcName)
+            cmd.setReturnType(strToCType(function.attrib["Return"]))
+            for argument in function:
+                 cmd.addArgument((argument.name,strToCType(argument.attrib['Type'])))
+            cmds[funcName] = cmd
+        return cmds
+                
+        

@@ -33,9 +33,13 @@ class Logger(metaclass=Singleton):
         self._mainLogger.setLevel(level)
         self._logFileHandler = logging.FileHandler(str(getLogFileByOs()))
         self._logFileHandler.setLevel(level)
+        self._logStreamHandler = logging.StreamHandler()
+        self._logStreamHandler.setLevel(level)
         self._logFormatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s][%(process)d %(thread)d] %(message)s')
         self._logFileHandler.setFormatter(self._logFormatter)
+        self._logStreamHandler.setFormatter(self._logFormatter)
         self._mainLogger.addHandler(self._logFileHandler)
+        self._mainLogger.addHandler(self._logStreamHandler)
     def log(self, level, fmt, *args):
         switch = {
             logging.DEBUG : self._mainLogger.debug,
@@ -46,5 +50,8 @@ class Logger(metaclass=Singleton):
         if level not in switch:
             raise GeneralException(ErrorCodes.LOG_LEVEL_NO_LOG_FUNCTION,"Mismatch between 'level' supplied to log function, and available logging functions.")
         else:
-            switch[level](fmt.format(args))
+            if len(args)==0:
+                switch[level](fmt)
+            else:
+                switch[level](fmt.format(args))
 

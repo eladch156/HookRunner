@@ -1,4 +1,4 @@
-# Generated from HookRunnerLang.g4 by ANTLR 4.8
+# Generated from .\HookRunnerLang.g4 by ANTLR 4.8
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -11,9 +11,9 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\20")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\22")
         buf.write("\7\4\2\t\2\3\2\3\2\3\2\2\2\3\2\2\2\2\5\2\4\3\2\2\2\4\5")
-        buf.write("\7\t\2\2\5\3\3\2\2\2\2")
+        buf.write("\7\n\2\2\5\3\3\2\2\2\2")
         return buf.getvalue()
 
 
@@ -28,11 +28,12 @@ class HookRunnerLangParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "'IF'", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "'Then'", "'End'" ]
+                     "'Then'", "'End'", "'Import'" ]
 
     symbolicNames = [ "<INVALID>", "IF", "WS", "NAME", "CONDITION_OPERATOR", 
-                      "THEN", "END", "Sentence", "Number", "String", "Value", 
-                      "Variable", "Condition", "Args", "Command" ]
+                      "THEN", "END", "IMPORT", "Sentence", "Number", "String", 
+                      "Import", "Value", "Variable", "Condition", "Args", 
+                      "Command" ]
 
     RULE_start = 0
 
@@ -45,14 +46,16 @@ class HookRunnerLangParser ( Parser ):
     CONDITION_OPERATOR=4
     THEN=5
     END=6
-    Sentence=7
-    Number=8
-    String=9
-    Value=10
-    Variable=11
-    Condition=12
-    Args=13
-    Command=14
+    IMPORT=7
+    Sentence=8
+    Number=9
+    String=10
+    Import=11
+    Value=12
+    Variable=13
+    Condition=14
+    Args=15
+    Command=16
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)

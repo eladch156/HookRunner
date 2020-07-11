@@ -4,6 +4,12 @@ class ErrorCodes(Enum):
     CONFIG_FILE_INCORRECT_STRUCTURE=1
     CONFIG_FILE_DOESNT_EXIST=2
     LOG_LEVEL_NO_LOG_FUNCTION=3
+    CANT_EDIT_SPEC_FILE=4
+    INTERNAL_ERROR=5
+    
+    def __int__(self):
+       return self.value
+
 
 class GeneralException(Exception):
     def __init__(self,code,message):
