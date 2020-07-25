@@ -1,4 +1,6 @@
 grammar HookRunnerLang;
+
+//Tokens
 IF: 'IF';
 WS:[ \t\r\n]+ -> skip;
 NAME: [a-zA-Z_]+;
@@ -6,14 +8,20 @@ CONDITION_OPERATOR: '>' | '<' | '>=' | '<=' | '==';
 THEN: 'Then';
 END: 'End';
 IMPORT: 'Import';
-fragment EMPTY: ' ';
-start: Sentence;
-Sentence: ((Condition | Command) ';') + ;
-Number: ('0' | [1-9][0-9]*);
-String: '"' .*? '"';
-Import: IMPORT String;
-Value: String | Number;
-Variable: NAME;
-Condition: IF '[' (Variable | Value) CONDITION_OPERATOR (Variable | Value) ']' THEN Sentence END;
-Args: ((NAME ',')* NAME | EMPTY);
-Command: NAME '(' Args ')';
+LET: 'Let';
+NUMBER: ('0' | [1-9][0-9]*);
+STRING: '"' .*? '"';
+EQUALS_SIGN: '=';
+
+
+
+//Compound
+start: sentence;
+sentence: ((condition | command) ';') + ;
+name: NAME;
+value: STRING | NUMBER;
+lib: IMPORT name;
+variable: LET name EQUALS_SIGN value;
+condition: IF '[' (variable | value) CONDITION_OPERATOR (variable | value) ']' THEN sentence END;
+args: ((name ',')* name);
+command: name '.' name '(' args ')' | name '(' args ')' | name '(' ')';

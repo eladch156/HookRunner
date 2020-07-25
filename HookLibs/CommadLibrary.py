@@ -41,6 +41,8 @@ class LibsSingleton(metaclass=Singleton):
         raise GeneralException(ErrorCodes.CANT_EDIT_SPEC_FILE, "Cannot edit lib spec file.")
     def __getitem__(self, key):
         pass
+    def isLibraryExist(self,name):
+        return self._libCfgReader.isLibraryExist(name)
     def init(self):
         self._libCfgReader = LibConfigFileReader(self._envSingleton['lib_spec_file'])
         self._libCfgReader.read()
@@ -86,6 +88,8 @@ class LibConfigFileReader():
             for apiCmd in self._cmds[lib]:
                 serializedCmds[lib][apiCmd] = str(self._cmds[lib][apiCmd])
         return serializedCmds
+    def isLibraryExist(self,name):
+        return name in self._cmds
     def __str__(self):
         return json.dumps(self.serialize(),indent=4)
 
