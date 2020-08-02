@@ -31,7 +31,7 @@ class Logger(metaclass=Singleton):
         self._envSingleton = Environment()
         level = strToLogLevel(self._envSingleton["log_level"])
         self._mainLogger.setLevel(level)
-        self._logFileHandler = logging.FileHandler(str(getLogFileByOs()))
+        self._logFileHandler = logging.FileHandler(str(getLogFileByOs()),mode='w')
         self._logFileHandler.setLevel(level)
         self._logStreamHandler = logging.StreamHandler()
         self._logStreamHandler.setLevel(level)
@@ -53,5 +53,5 @@ class Logger(metaclass=Singleton):
             if len(args)==0:
                 switch[level](fmt)
             else:
-                switch[level](fmt.format(args))
+                switch[level](fmt.format(*args))
 

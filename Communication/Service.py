@@ -1,37 +1,75 @@
 import asyncore
 from queue import Queue
 from threading import Thread
-from Actions import Action
-from App import Logger
+from Communication.Actions import Action
+from App.Logger import Logger
 import logging
 from json import loads
 
 TASK_QUEUE = Queue()
 BUFFER_SIZE = 8192
-LoggerSingleton = Logger.Logger()
+IS_FINISH = False
 
 def _handleTasks():
     while True:
-        LoggerSingleton.log(logging.INFO,"Waiting for the next task...")
-        action = Action.create(TASK_QUEUE.get())
+        _logger = Logger()
+        try:
+            action = Action.create(TASK_QUEUE.get(block=True, timeout=3))
+        except Exception as ex:
+            if IS_FINISH:
+                _logger.log(logging.DEBUG,"Main thread signed to exit.")
+                break
+            else:
+                continue
         action.run()
-        LoggerSingleton.log(logging.INFO,"Task is done...")
+        _logger.log(logging.INFO,"Task is done...")
         TASK_QUEUE.task_done()
+        _logger.log(logging.INFO,"Waiting for the next task...")
+
+class ServiceThread(Thread):
+    def __init__(self, host):
+        global IS_FINISH
+        Thread.__init__(self)
+        self._logger = Logger()
+        self._service = Service(host)
+        IS_FINISH = False
+        self._taskHandler = Thread(target=_handleTasks)
+    def run(self):
+        self._taskHandler.start()
+        asyncore.loop()
+    def stop(self):
+        global IS_FINISH
+        IS_FINISH = True
+        self._taskHandler.join()
+        self._logger.log(logging.DEBUG,"Closing all connections...")
+        asyncore.close_all()
+        self._logger.log(logging.DEBUG,"Waiting for service dispatcher to close...")
+        self._service.close()
+        self._logger.log(logging.DEBUG,"Service dispatcher closed...")
+        self.join()
 
 class ServiceHandler(asyncore.dispatcher_with_send):
     def handle_read(self):
-        data = loads(self.recv(BUFFER_SIZE))
-        TASK_QUEUE.put(data)
+        buffer = self.recv(BUFFER_SIZE)
+        if buffer:
+            data = loads(buffer.decode("UTF-8"))
+            TASK_QUEUE.put(data,block=True,timeout=5)
 
 class Service(asyncore.dispatcher):
     def __init__(self,host):
         asyncore.dispatcher.__init__(self)
-        Thread(target=_handleTasks).start()
+        self._logger = Logger()
         self.create_socket()
         self.set_reuse_addr()
         self.bind((host,0))
+        self._logger.log(logging.DEBUG,"Service Port {}",self.socket.getsockname()[1])
         self.listen(5)
-    def handle_accept(self, sock, addr):
-        LoggerSingleton.log(logging.DEBUG,"Incoming request , (Address: %s)",repr(addr))
-        handler = ServiceHandler(sock=sock)
+    def handle_close(self):
+        self._logger.log(logging.DEBUG,"Client: Connection Closed") 
+    def handle_accept(self):
+        pair = self.accept()
+        if pair is not None:
+            sock, addr = pair
+            self._logger.log(logging.DEBUG,"Incoming request : {}",repr(addr))
+            handler = ServiceHandler(sock=sock)
 
