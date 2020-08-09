@@ -21,6 +21,7 @@ class Application():
         self._service.start()
         self._logger.log(logging.INFO, "Server is ready...")
         self._logger.log(logging.DEBUG, "Is ServerThread alive? {status}".format(status=str(self._service.is_alive())))
-        dummy = input("Press any key to initiate shutdown.....")
+        self._logger.log(logging.INFO,"On any input server will close.")
+        dummy = input()
         self._service.stop()
 

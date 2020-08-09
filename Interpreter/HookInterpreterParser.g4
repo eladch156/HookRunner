@@ -1,0 +1,11 @@
+grammar HookInterpreterParser;
+import HookInterpreterLexer;
+
+// Primary
+primaryExpression: BlockComment | LineComment | variableDeclare | includeSentence | functionCall;
+sentenceEnding: End | NewLine;
+variableDeclare: Declare Whitespace Identifier Whitespace? Equals Whitespace? .*? sentenceEnding;
+includeSentence: Include Whitespace '"' NotNewLine '"' Whitespace? sentenceEnding;
+argument: Identifier | '"' NotNewLine '"' | Digits;
+arguments : (argument Whitespace? ',' Whitespace?)* argument;
+functionCall: (Identifier Dot)? Identifier '(' Whitespace? arguments? Whitespace? ')' sentenceEnding;
