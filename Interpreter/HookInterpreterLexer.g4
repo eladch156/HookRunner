@@ -1,5 +1,5 @@
 lexer grammar HookInterpreterLexer;
-
+// ######## Version 0.0.1 #############//
 // Skip
 Whitespace: [ \t]+ -> skip;
 NewLine: ('\r' '\n'? | '\n') -> skip;
