@@ -25,9 +25,9 @@ def getLogFileByOs():
         return dataFolder
     raise OSError
 
-class Logger(metaclass=Singleton):
-    def __init__(self):
-        self._mainLogger = logging.getLogger("App")
+class Logger():
+    def __init__(self, *args):
+        self._mainLogger = logging.getLogger("::".join(args))
         self._envSingleton = Environment()
         level = strToLogLevel(self._envSingleton["log_level"])
         self._mainLogger.setLevel(level)

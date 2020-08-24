@@ -6,10 +6,10 @@ class ErrorCodes(Enum):
     LOG_LEVEL_NO_LOG_FUNCTION=3
     CANT_EDIT_SPEC_FILE=4
     INTERNAL_ERROR=5
+    HOOK_INC_NOT_VALID=6
     
     def __int__(self):
        return self.value
-
 
 class GeneralException(Exception):
     def __init__(self,code,message):

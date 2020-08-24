@@ -12,12 +12,11 @@ IS_FINISH = False
 
 def _handleTasks():
     while True:
-        _logger = Logger()
+        _logger = Logger("Service")
         try:
             action = Action.create(TASK_QUEUE.get(block=True, timeout=3))
         except Exception as ex:
             if IS_FINISH:
-                _logger.log(logging.DEBUG,"Main thread signed to exit.")
                 break
             else:
                 continue
@@ -25,12 +24,14 @@ def _handleTasks():
         _logger.log(logging.INFO,"Task is done...")
         TASK_QUEUE.task_done()
         _logger.log(logging.INFO,"Waiting for the next task...")
+    if IS_FINISH:
+        _logger.log(logging.DEBUG,"Main thread signed to exit.")
 
 class ServiceThread(Thread):
     def __init__(self, host):
         global IS_FINISH
         Thread.__init__(self)
-        self._logger = Logger()
+        self._logger = Logger("Service","MainThread")
         self._service = Service(host)
         IS_FINISH = False
         self._taskHandler = Thread(target=_handleTasks)
@@ -58,7 +59,7 @@ class ServiceHandler(asyncore.dispatcher_with_send):
 class Service(asyncore.dispatcher):
     def __init__(self,host):
         asyncore.dispatcher.__init__(self)
-        self._logger = Logger()
+        self._logger = Logger("Service","Dispatcher")
         self.create_socket()
         self.set_reuse_addr()
         self.bind((host,0))

@@ -1,4 +1,4 @@
-# Generated from .\Interpreter\HookInterpreterParser.g4 by ANTLR 4.8
+# Generated from .\HookInterpreterParser.g4 by ANTLR 4.8
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .HookInterpreterParserParser import HookInterpreterParserParser

@@ -14,7 +14,7 @@ class Application():
         self._enviorment.readFromFile()
     def run(self): 
         self._libSpecReader = LibsSingleton()
-        self._logger = Logger()
+        self._logger = Logger("Application")
         self._logger.log(logging.INFO,"HookRunner is running.")
         self._libSpecReader.init()
         self._service = ServiceThread('localhost')

@@ -43,6 +43,8 @@ class LibsSingleton(metaclass=Singleton):
         pass
     def isLibraryExist(self,name):
         return self._libCfgReader.isLibraryExist(name)
+    def isCmdExist(self,lib,cmd):
+        return self._libCfgReader.isCmdExist(lib,cmd)
     def init(self):
         self._libCfgReader = LibConfigFileReader(self._envSingleton['lib_spec_file'])
         self._libCfgReader.read()
@@ -74,7 +76,7 @@ class LibConfigFileReader():
     def __init__(self, path):
         self._cfgPath = path
         self._cmds = {}
-        self._logger = Logger()
+        self._logger = Logger("Library","Loader")
     def read(self):
         root = ElementTree.parse(self._cfgPath).getroot()
         for lib in root:
@@ -90,6 +92,8 @@ class LibConfigFileReader():
         return serializedCmds
     def isLibraryExist(self,name):
         return name in self._cmds
+    def isCmdExist(self,lib,cmd):
+        return lib in self._cmds and cmd in self._cmds[lib]
     def __str__(self):
         return json.dumps(self.serialize(),indent=4)
 
