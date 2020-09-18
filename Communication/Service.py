@@ -5,6 +5,7 @@ from Communication.Actions import Action
 from App.Logger import Logger
 import logging
 from json import loads
+from Communication.PortSupplier import PortSupplier
 
 TASK_QUEUE = Queue()
 BUFFER_SIZE = 8192
@@ -63,7 +64,8 @@ class Service(asyncore.dispatcher):
         self.create_socket()
         self.set_reuse_addr()
         self.bind((host,0))
-        self._logger.log(logging.DEBUG,"Service Port {}",self.socket.getsockname()[1])
+        self._portSupplier = PortSupplier(self.socket.getsockname()[1])
+        self._portSupplier.save()
         self.listen(5)
     def handle_close(self):
         self._logger.log(logging.DEBUG,"Client: Connection Closed") 

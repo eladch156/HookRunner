@@ -4,42 +4,34 @@ import logging
 import os
 from pathlib import Path
 from Utils.Exceptions import ErrorCodes,GeneralException
+from Utils.General import LogUtils
 
-def strToLogLevel(strLevel):
-    switch = {
-        "Debug" : logging.DEBUG,
-        "Info" : logging.INFO,
-        "Warning" : logging.WARNING,
-        "Error" : logging.ERROR
-    }
-    return logging.INFO if strLevel not in switch else switch[strLevel]
-
-def getLogFileByOs():
-    if os.name == "nt":
-        dataFolder = Path(os.getenv('APPDATA')) / "HookRunner"
-        if not dataFolder.exists():
-            dataFolder.mkdir()
-        return (dataFolder / "HookRunner.log")
-    if os.name == "posix":
-        dataFolder = Path("/var/log/HookRunner.log")
-        return dataFolder
-    raise OSError
+IS_DONE=False
+FILE_HANDLER=None
+STREAM_HANDLER=None
+LOG_FORMATER=None
 
 class Logger():
     def __init__(self, *args):
+        global FILE_HANDLER
+        global STREAM_HANDLER
+        global LOG_FORMATER
+        global IS_DONE
         self._mainLogger = logging.getLogger("::".join(args))
         self._envSingleton = Environment()
-        level = strToLogLevel(self._envSingleton["log_level"])
+        level = LogUtils.strToLogLevel(self._envSingleton["log_level"])
         self._mainLogger.setLevel(level)
-        self._logFileHandler = logging.FileHandler(str(getLogFileByOs()),mode='w')
-        self._logFileHandler.setLevel(level)
-        self._logStreamHandler = logging.StreamHandler()
-        self._logStreamHandler.setLevel(level)
-        self._logFormatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s][%(process)d %(thread)d] %(message)s')
-        self._logFileHandler.setFormatter(self._logFormatter)
-        self._logStreamHandler.setFormatter(self._logFormatter)
-        self._mainLogger.addHandler(self._logFileHandler)
-        self._mainLogger.addHandler(self._logStreamHandler)
+        if not IS_DONE:
+            FILE_HANDLER = logging.FileHandler(str(LogUtils.getLogFileByOs()),mode='w')
+            FILE_HANDLER.setLevel(level)
+            STREAM_HANDLER = logging.StreamHandler()
+            STREAM_HANDLER.setLevel(level)
+            LOG_FORMATER = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s][%(process)d %(thread)d] %(message)s')
+            FILE_HANDLER.setFormatter(LOG_FORMATER)
+            STREAM_HANDLER.setFormatter(LOG_FORMATER)
+            IS_DONE = True
+        self._mainLogger.addHandler(FILE_HANDLER)
+        self._mainLogger.addHandler(STREAM_HANDLER)
     def log(self, level, fmt, *args):
         switch = {
             logging.DEBUG : self._mainLogger.debug,
