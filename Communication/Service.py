@@ -12,7 +12,7 @@ IS_FINISH = False
 
 def _handleTasks():
     while True:
-        _logger = Logger("Service")
+        _logger = Logger("Service","TaskHandler")
         try:
             action = Action.create(TASK_QUEUE.get(block=True, timeout=3))
         except Exception as ex:

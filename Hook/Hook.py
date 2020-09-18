@@ -1,82 +1,86 @@
 from App.Logger import Logger
 from antlr4 import *
+from antlr4.tree.Tree import TerminalNodeImpl
 from Hook.Step import StepBase,StepInclude,StepDeclVar,StepType
-from Interpreter.HookInterpreterParserLexer import HookInterpreterParserLexer
-from Interpreter.HookInterpreterParserParser import HookInterpreterParserParser
-from Interpreter.HookInterpreterParserListener import HookInterpreterParserListener
+from Interpreter.HookInterpreterLexer import HookInterpreterLexer
+from Interpreter.HookInterpreterListener import HookInterpreterListener
+from Interpreter.HookInterpreterParser import HookInterpreterParser
 import logging
 from typing import List
 StepList = List[StepBase]
 
-class BaseInterpreterListener(HookInterpreterParserListener):
-    def BaseInterpreterListener(self):
-        HookInterpreterParserListener.__init__()
+class MainInterpreterListener(HookInterpreterListener):
+    def MainInterpreterListener(self):
+        HookInterpreterListener.__init__()
         self._logger = Logger("Interpreter","Listener")
         self._steps = []
+    
+    def setSteps(self,_steps):
+        self._step = _steps
 
-    def getSteps(self):
-        return self._steps
-
-    # Enter a parse tree produced by HookInterpreterParserParser#primaryExpression.
-    def enterPrimaryExpression(self, ctx:HookInterpreterParserParser.PrimaryExpressionContext):
+    # Enter a parse tree produced by HookInterpreterParser#primaryExpression.
+    def enterPrimaryExpression(self, ctx:HookInterpreterParser.PrimaryExpressionContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParserParser#primaryExpression.
-    def exitPrimaryExpression(self, ctx:HookInterpreterParserParser.PrimaryExpressionContext):
-        pass
-
-
-    # Enter a parse tree produced by HookInterpreterParserParser#sentenceEnding.
-    def enterSentenceEnding(self, ctx:HookInterpreterParserParser.SentenceEndingContext):
-        pass
-
-    # Exit a parse tree produced by HookInterpreterParserParser#sentenceEnding.
-    def exitSentenceEnding(self, ctx:HookInterpreterParserParser.SentenceEndingContext):
+    # Exit a parse tree produced by HookInterpreterParser#primaryExpression.
+    def exitPrimaryExpression(self, ctx:HookInterpreterParser.PrimaryExpressionContext):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParserParser#variableDeclare.
-    def enterVariableDeclare(self, ctx:HookInterpreterParserParser.VariableDeclareContext):
+    # Enter a parse tree produced by HookInterpreterParser#sentenceEnding.
+    def enterSentenceEnding(self, ctx:HookInterpreterParser.SentenceEndingContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParserParser#variableDeclare.
-    def exitVariableDeclare(self, ctx:HookInterpreterParserParser.VariableDeclareContext):
-        self._steps.append(StepDeclVar(ctx.Identifier(),ctx.NotNewLine()))
-
-
-    # Enter a parse tree produced by HookInterpreterParserParser#includeSentence.
-    def enterIncludeSentence(self, ctx:HookInterpreterParserParser.IncludeSentenceContext):
-        self._steps.append(StepInclude(ctx.NotNewLine(0),ctx.NotNewLine(1)))
-
-    # Exit a parse tree produced by HookInterpreterParserParser#includeSentence.
-    def exitIncludeSentence(self, ctx:HookInterpreterParserParser.IncludeSentenceContext):
+    # Exit a parse tree produced by HookInterpreterParser#sentenceEnding.
+    def exitSentenceEnding(self, ctx:HookInterpreterParser.SentenceEndingContext):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParserParser#argument.
-    def enterArgument(self, ctx:HookInterpreterParserParser.ArgumentContext):
+    # Enter a parse tree produced by HookInterpreterParser#variableDeclare.
+    def enterVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParserParser#argument.
-    def exitArgument(self, ctx:HookInterpreterParserParser.ArgumentContext):
+    # Exit a parse tree produced by HookInterpreterParser#variableDeclare.
+    def exitVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
+        self._steps.append(StepDeclVar(ctx.Identifier(),ctx.FreeText()))
+        self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
+
+
+    # Enter a parse tree produced by HookInterpreterParser#includeSentence.
+    def enterIncludeSentence(self, ctx:HookInterpreterParser.IncludeSentenceContext):
+        self._steps.append(StepInclude(ctx.Word(0),ctx.Word(1)))
+        self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
+
+
+    # Exit a parse tree produced by HookInterpreterParser#includeSentence.
+    def exitIncludeSentence(self, ctx:HookInterpreterParser.IncludeSentenceContext):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParserParser#arguments.
-    def enterArguments(self, ctx:HookInterpreterParserParser.ArgumentsContext):
+    # Enter a parse tree produced by HookInterpreterParser#argument.
+    def enterArgument(self, ctx:HookInterpreterParser.ArgumentContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParserParser#arguments.
-    def exitArguments(self, ctx:HookInterpreterParserParser.ArgumentsContext):
+    # Exit a parse tree produced by HookInterpreterParser#argument.
+    def exitArgument(self, ctx:HookInterpreterParser.ArgumentContext):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParserParser#functionCall.
-    def enterFunctionCall(self, ctx:HookInterpreterParserParser.FunctionCallContext):
+    # Enter a parse tree produced by HookInterpreterParser#arguments.
+    def enterArguments(self, ctx:HookInterpreterParser.ArgumentsContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParserParser#functionCall.
-    def exitFunctionCall(self, ctx:HookInterpreterParserParser.FunctionCallContext):
+    # Exit a parse tree produced by HookInterpreterParser#arguments.
+    def exitArguments(self, ctx:HookInterpreterParser.ArgumentsContext):
+        pass
+
+
+    # Enter a parse tree produced by HookInterpreterParser#functionCall.
+    def enterFunctionCall(self, ctx:HookInterpreterParser.FunctionCallContext):
+        pass
+
+    # Exit a parse tree produced by HookInterpreterParser#functionCall.
+    def exitFunctionCall(self, ctx:HookInterpreterParser.FunctionCallContext):
         pass
 
 
@@ -92,18 +96,31 @@ def execute(steps: StepList):
     for _step in steps:
         _logger.log(logging.INFO,"Found step: {}",_step.what())
         _step.run()
-        
+
+def traverse(tree, rule_names, indent = 0):
+    _logger = Logger("Hook","Execute","TreverseScript")
+    if tree.getText() == "<EOF>":
+        return
+    elif isinstance(tree, TerminalNodeImpl):
+        _logger.log(logging.INFO,"{0}TOKEN='{1}'".format("  " * indent, tree.getText()))
+    else:
+        _logger.log(logging.INFO,"{0}{1}".format("  " * indent, rule_names[tree.getRuleIndex()]))
+        for child in tree.children:
+            traverse(child, rule_names, indent + 1)
 
 def runHook(hookPath):
     _input = FileStream(hookPath)
-    _lexer = HookInterpreterParserLexer(_input)
+    _lexer = HookInterpreterLexer(_input)
     _stream = CommonTokenStream(_lexer)
-    _parser = HookInterpreterParserParser(_stream)
+    _parser = HookInterpreterParser(_stream)
     _tree = _parser.primaryExpression()
-    _listener = BaseInterpreterListener()
+    traverse(_tree,_parser.ruleNames)
+    _steps = []
+    _listener = MainInterpreterListener()
+    _listener.setSteps(_steps)
     _walker = ParseTreeWalker()
     _walker.walk(_listener, _tree)
-    execute(_listener.getSteps())
+    execute(_steps)
 
 
 

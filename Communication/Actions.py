@@ -16,7 +16,7 @@ class Action():
             'Test' : TestAction,
             'RunHook' : RunHookAction,
         }
-        data = json['Paramaters'] if 'Data' in json else None
+        data = json['Data'] if 'Data' in json else None
         return switch[json['Name']](data) if json['Name'] in switch else None
     def run(self):
         raise NotImplementedError
