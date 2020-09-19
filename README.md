@@ -30,3 +30,4 @@ Hook Runner is a more strict tight framework, emphasizing DSL and C libraries to
 
 # License, Credits
 - Antlr4
+- Typescript, Babel, Webpack, Node, VueJS - For Web Client IS.
