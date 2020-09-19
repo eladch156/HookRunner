@@ -1,0 +1,40 @@
+{
+  "name": "hookrunnerclient",
+  "version": "0.0.1",
+  "description": "HookRunner Web Client JS",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development && copy /Y .\\dist\\index.html ..\\Application\\templates\\index.html && copy /Y .\\dist\\bundle.js ..\\Application\\static\\bundle.js && %SystemRoot%\\system32\\WindowsPowerShell\\v1.0\\powershell.exe .\\ReplaceForFlask.ps1 ..\\Application\\templates\\index.html",
+    "build": "webpack --mode production && copy /Y .\\dist\\index.html ..\\Application\\templates\\index.html && copy /Y .\\dist\\bundle.js ..\\Application\\static\\bundle.js && %SystemRoot%\\system32\\WindowsPowerShell\\v1.0\\powershell.exe .\\ReplaceForFlask.ps1 ..\\Application\\templates\\index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "babel-loader": "^8.1.0",
+    "html-webpack-plugin": "^4.4.1",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-encoding-plugin": "^0.3.1",
+    "typescript": "^4.0.3",
+    "@babel/preset-typescript": "^7.10.4",
+    "babel-plugin-transform-class-properties": "^6.5.2",
+    "babel-register": "^6.5.2"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "@babel/runtime": "^7.11.2",
+    "@babel/runtime-corejs3": "7.11.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eladch156/HookRunner.git"
+  },
+  "author": "Elad Chomsky",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eladch156/HookRunner/issues"
+  },
+  "homepage": "https://github.com/eladch156/HookRunner#readme"
+}

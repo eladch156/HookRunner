@@ -5,3 +5,5 @@ pyvenv.cfg
 /Scripts/*
 */__pycache__/*
 */.antlr/*
+WebClient/Js/node_modules/
+WebClient/Js/package-lock.json
