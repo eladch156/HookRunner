@@ -1,5 +1,6 @@
 from enum import Enum
 from HookLibs.CommadLibrary import LibsSingleton
+from Utils.Singleton import Singleton
 from Utils.Exceptions import ErrorCodes,GeneralException
 
 class StepType(Enum):
@@ -12,19 +13,22 @@ class StepType(Enum):
 class StepExceutor():
     pass
 
+class StepVarMap(metaclass=Singleton):
+    def __init__(self):
+        self._db = {}
+    def __getitem__(self, key):
+        return self._db[key]
+    def __setitem__(self, key, value):
+        self._db[key] = value
+    
+
 class StepBase():
     def __init__(self):
-        self._db = None
+        self._vars = StepVarMap()
     def run(self):
         raise NotImplementedError
     def what(self):
         raise NotImplementedError
-    @property
-    def db(self):
-        return self._db
-    @db.setter
-    def db(self,value):
-        self._db = value
 
 class StepInclude(StepBase):
     def __init__(self, *args):
@@ -44,7 +48,7 @@ class StepDeclVar(StepBase):
         self._name = name
         self._value = value
     def run(self):
-        self.db[self._name] =  self._value
+        self._vars[self._name] =  self._value
     def what(self):
         return StepType.VAR
 

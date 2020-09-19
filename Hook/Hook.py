@@ -10,13 +10,13 @@ from typing import List
 StepList = List[StepBase]
 
 class MainInterpreterListener(HookInterpreterListener):
-    def MainInterpreterListener(self):
-        HookInterpreterListener.__init__()
+    def __init__(self):
+        HookInterpreterListener.__init__(self)
         self._logger = Logger("Interpreter","Listener")
         self._steps = []
     
-    def setSteps(self,_steps):
-        self._step = _steps
+    def getSteps(self):
+        return self._steps
 
     # Enter a parse tree produced by HookInterpreterParser#primaryExpression.
     def enterPrimaryExpression(self, ctx:HookInterpreterParser.PrimaryExpressionContext):
@@ -38,17 +38,17 @@ class MainInterpreterListener(HookInterpreterListener):
 
     # Enter a parse tree produced by HookInterpreterParser#variableDeclare.
     def enterVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
-        pass
+        self._steps.append(StepDeclVar(ctx.Identifier(),ctx.FreeText()))
+        self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
 
     # Exit a parse tree produced by HookInterpreterParser#variableDeclare.
     def exitVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
-        self._steps.append(StepDeclVar(ctx.Identifier(),ctx.FreeText()))
-        self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
+        pass
 
 
     # Enter a parse tree produced by HookInterpreterParser#includeSentence.
     def enterIncludeSentence(self, ctx:HookInterpreterParser.IncludeSentenceContext):
-        self._steps.append(StepInclude(ctx.Word(0),ctx.Word(1)))
+        self._steps.append(StepInclude(ctx.Identifier(0),ctx.Identifier(1)))
         self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
 
 
@@ -115,12 +115,10 @@ def runHook(hookPath):
     _parser = HookInterpreterParser(_stream)
     _tree = _parser.primaryExpression()
     traverse(_tree,_parser.ruleNames)
-    _steps = []
     _listener = MainInterpreterListener()
-    _listener.setSteps(_steps)
     _walker = ParseTreeWalker()
     _walker.walk(_listener, _tree)
-    execute(_steps)
+    execute(_listener.getSteps())
 
 
 

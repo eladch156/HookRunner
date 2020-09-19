@@ -7,6 +7,7 @@ class ErrorCodes(Enum):
     CANT_EDIT_SPEC_FILE=4
     INTERNAL_ERROR=5
     HOOK_INC_NOT_VALID=6
+    COMMUNICATION_DB_ERROR=7
     
     def __int__(self):
        return self.value

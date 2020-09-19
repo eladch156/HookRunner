@@ -25,7 +25,7 @@ FreeText:  .+?;
 
 
 // Primary
-primaryExpression: BlockComment | LineComment | variableDeclare | includeSentence | functionCall;
+primaryExpression: (BlockComment | LineComment | variableDeclare | includeSentence | functionCall)+;
 sentenceEnding: End | NewLine;
 includeSentence: Include DoubleQuotes Identifier Dot Identifier DoubleQuotes sentenceEnding;
 variableDeclare: Declare Identifier Equals FreeText sentenceEnding;
