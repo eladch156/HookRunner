@@ -1,6 +1,7 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const EncodingPlugin = require('webpack-encoding-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
     entry: "./Src/index.ts",
@@ -16,12 +17,22 @@ module.exports = {
            filename: 'index.html',
            template: './index.html' 
         }),
+        new VueLoaderPlugin({
+
+        }),
         new EncodingPlugin({
             encoding: 'iso-8859-1'
         })
     ],
     module: {
         rules: [
+            {
+                test: /\.vue$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'vue-loader'
+                }
+            },
             {
                 test: /\.(js|ts|tsx)$/, //using regex to tell babel exactly what files to transcompile
                 exclude: /node_modules/, // files to be ignored
