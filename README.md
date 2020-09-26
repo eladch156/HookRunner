@@ -23,11 +23,15 @@ Hook Runner is a more strict tight framework, emphasizing DSL and C libraries to
 - Due to using C based library interaction - The inner core logic is faster, safer and stronger.
 - Easy to montior compared to bash - In case of errors. Very easy to find code owner to speed up problem fixing.
 - Not designed to be a console, so can work as a Service for example.
+- Very dynamic TCP Socket communication - Making multiple sources easier.
+- Libraries can be easily updated - Even after deployment.
+- Decoupling between script logic to IS logic.
 ### Cons
 - Commands require pre-compilation
 - Python is not the fastest in the world, so some functionallity might be slower compared to bash.
 - DSL to initiate command running might be limited.
+- Monetization still required - This is just a framework to make it better. 
 
 # License, Credits
 - Antlr4
-- Typescript, Babel, Webpack, Node, VueJS - For Web Client IS.
+- Typescript, Babel, Webpack, Node, VueJS, Flask, Flask-RESTFUL - For Web Client IS.
