@@ -2,6 +2,7 @@ from enum import Enum
 from Utils.Singleton import Singleton
 from Env.EnvSingleton import Environment
 from ctypes import *
+import sys
 import logging
 from App.Logger import Logger
 from Utils.Exceptions import GeneralException,ErrorCodes
@@ -25,6 +26,12 @@ def strToCType(argType):
     }.get(argType, None)
 
 
+def loadLibraryFile(libPath):
+    try:
+        return WinDLL(libPath)
+    except Exception as _:
+        return cdll.LoadLibrary(libPath)
+
 def getLibCmd(lib, funcname, restype, argtypes):
     """Simplify wrapping ctypes functions"""
     func = lib.__getattr__(funcname)
@@ -36,18 +43,25 @@ def getLibCmd(lib, funcname, restype, argtypes):
 class LibsSingleton(metaclass=Singleton):
     def __init__(self):
         self._envSingleton = Environment()
+        self._logger = Logger("LibrariesSingleton")
         self._libCfgReader = None
+        self._cmds = None
     def __setitem__(self, key, value):
         raise GeneralException(ErrorCodes.CANT_EDIT_SPEC_FILE, "Cannot edit lib spec file.")
     def __getitem__(self, key):
-        pass
-    def isLibraryExist(self,name):
-        return self._libCfgReader.isLibraryExist(name)
-    def isCmdExist(self,lib,cmd):
-        return self._libCfgReader.isCmdExist(lib,cmd)
+        return self._cmds[key[0]][key[1]]
+    def loadCommand(self,library,command):
+        self._logger.log(logging.INFO,"Trying to load {} from {}.".format(command,library))
+        if library not in self._cmds:
+            self._logger.log(logging.ERROR,"Library {} doesn't exist.".format(library))
+            return False
+        if command not in self._cmds[library]:
+            self._logger.log(logging.ERROR,"Command {} doesn't exist.".format(command))
+            return False
+        return self._cmds[library][command].load()
     def init(self):
         self._libCfgReader = LibConfigFileReader(self._envSingleton['lib_spec_file'])
-        self._libCfgReader.read()
+        self._cmds = self._libCfgReader.read()
         
 
 def ApiCommandToJson(JSONEncoder):
@@ -61,13 +75,21 @@ class ApiCommand():
         self._libPath = libPath
         self._retType = None
         self._argsTypeList = []
+        self._logger = Logger("Library","Command")
+        self._function = None
     def setReturnType(self, typ):
         self._retType = typ
     def addArgument(self, arg): # arg = (Name, Type)        
         self._argsTypeList.append(arg)
+    def load(self):
+        try:
+            self._function = getLibCmd(loadLibraryFile(self._libPath), self._funcName, self._retType, self._argsTypeList)
+            return True
+        except Exception as ex:
+            self._logger.log(logging.ERROR,str(ex))
+            return False
     def run(self, *args):
-        function = getLibCmd(WinDLL(str(self._libPath)), self._funcName, self._retType, self._argsTypeList)
-        return function(args)
+        return self._function(*args)
     def __str__(self):
         return "Library={},Function={} {}({})".format(self._libPath,self._retType,self._funcName,",".join(self._argsTypeList))
 
@@ -83,6 +105,7 @@ class LibConfigFileReader():
             specReader = LibSpecReader(lib.attrib['SpecPath'])
             self._cmds[lib.attrib['Name']] = specReader.read()
         self._logger.log(logging.DEBUG, str(self))
+        return self._cmds
     def serialize(self):
         serializedCmds = {}
         for lib in self._cmds:
@@ -90,10 +113,6 @@ class LibConfigFileReader():
             for apiCmd in self._cmds[lib]:
                 serializedCmds[lib][apiCmd] = str(self._cmds[lib][apiCmd])
         return serializedCmds
-    def isLibraryExist(self,name):
-        return name in self._cmds
-    def isCmdExist(self,lib,cmd):
-        return lib in self._cmds and cmd in self._cmds[lib]
     def __str__(self):
         return json.dumps(self.serialize(),indent=4)
 

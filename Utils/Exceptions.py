@@ -8,6 +8,8 @@ class ErrorCodes(Enum):
     INTERNAL_ERROR=5
     HOOK_INC_NOT_VALID=6
     COMMUNICATION_DB_ERROR=7
+    NO_LIBRARY_BY_NAME=8
+    NO_COMMAND_BY_NAME=9
     
     def __int__(self):
        return self.value

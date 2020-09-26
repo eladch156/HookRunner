@@ -12,29 +12,28 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\24")
-        buf.write("G\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
+        buf.write("B\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
         buf.write("\t\b\3\2\3\2\3\2\3\2\3\2\6\2\26\n\2\r\2\16\2\27\3\3\3")
         buf.write("\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5")
-        buf.write("\3\5\3\6\3\6\3\6\3\6\3\6\5\6/\n\6\3\7\3\7\3\7\7\7\64\n")
-        buf.write("\7\f\7\16\7\67\13\7\3\7\3\7\3\b\3\b\5\b=\n\b\3\b\3\b\3")
-        buf.write("\b\5\bB\n\b\3\b\3\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\3\3")
-        buf.write("\2\17\20\2I\2\25\3\2\2\2\4\31\3\2\2\2\6\33\3\2\2\2\b#")
-        buf.write("\3\2\2\2\n.\3\2\2\2\f\65\3\2\2\2\16<\3\2\2\2\20\26\7\5")
-        buf.write("\2\2\21\26\7\6\2\2\22\26\5\b\5\2\23\26\5\6\4\2\24\26\5")
-        buf.write("\16\b\2\25\20\3\2\2\2\25\21\3\2\2\2\25\22\3\2\2\2\25\23")
-        buf.write("\3\2\2\2\25\24\3\2\2\2\26\27\3\2\2\2\27\25\3\2\2\2\27")
-        buf.write("\30\3\2\2\2\30\3\3\2\2\2\31\32\t\2\2\2\32\5\3\2\2\2\33")
-        buf.write("\34\7\b\2\2\34\35\7\r\2\2\35\36\7\23\2\2\36\37\7\t\2\2")
-        buf.write("\37 \7\23\2\2 !\7\r\2\2!\"\5\4\3\2\"\7\3\2\2\2#$\7\7\2")
-        buf.write("\2$%\7\23\2\2%&\7\16\2\2&\'\7\24\2\2\'(\5\4\3\2(\t\3\2")
-        buf.write("\2\2)/\7\23\2\2*+\7\r\2\2+,\7\24\2\2,/\7\r\2\2-/\7\21")
-        buf.write("\2\2.)\3\2\2\2.*\3\2\2\2.-\3\2\2\2/\13\3\2\2\2\60\61\5")
-        buf.write("\n\6\2\61\62\7\3\2\2\62\64\3\2\2\2\63\60\3\2\2\2\64\67")
-        buf.write("\3\2\2\2\65\63\3\2\2\2\65\66\3\2\2\2\668\3\2\2\2\67\65")
-        buf.write("\3\2\2\289\5\n\6\29\r\3\2\2\2:;\7\23\2\2;=\7\t\2\2<:\3")
-        buf.write("\2\2\2<=\3\2\2\2=>\3\2\2\2>?\7\23\2\2?A\7\13\2\2@B\5\f")
-        buf.write("\7\2A@\3\2\2\2AB\3\2\2\2BC\3\2\2\2CD\7\f\2\2DE\5\4\3\2")
-        buf.write("E\17\3\2\2\2\b\25\27.\65<A")
+        buf.write("\3\5\3\6\3\6\3\7\3\7\3\7\7\7/\n\7\f\7\16\7\62\13\7\3\7")
+        buf.write("\3\7\3\b\3\b\5\b8\n\b\3\b\3\b\3\b\5\b=\n\b\3\b\3\b\3\b")
+        buf.write("\3\b\2\2\t\2\4\6\b\n\f\16\2\4\3\3\21\22\4\2\17\17\23\24")
+        buf.write("\2B\2\25\3\2\2\2\4\31\3\2\2\2\6\33\3\2\2\2\b#\3\2\2\2")
+        buf.write("\n)\3\2\2\2\f\60\3\2\2\2\16\67\3\2\2\2\20\26\7\5\2\2\21")
+        buf.write("\26\7\6\2\2\22\26\5\b\5\2\23\26\5\6\4\2\24\26\5\16\b\2")
+        buf.write("\25\20\3\2\2\2\25\21\3\2\2\2\25\22\3\2\2\2\25\23\3\2\2")
+        buf.write("\2\25\24\3\2\2\2\26\27\3\2\2\2\27\25\3\2\2\2\27\30\3\2")
+        buf.write("\2\2\30\3\3\2\2\2\31\32\t\2\2\2\32\5\3\2\2\2\33\34\7\b")
+        buf.write("\2\2\34\35\7\r\2\2\35\36\7\23\2\2\36\37\7\t\2\2\37 \7")
+        buf.write("\23\2\2 !\7\16\2\2!\"\5\4\3\2\"\7\3\2\2\2#$\7\7\2\2$%")
+        buf.write("\7\23\2\2%&\7\20\2\2&\'\7\17\2\2\'(\5\4\3\2(\t\3\2\2\2")
+        buf.write(")*\t\3\2\2*\13\3\2\2\2+,\5\n\6\2,-\7\3\2\2-/\3\2\2\2.")
+        buf.write("+\3\2\2\2/\62\3\2\2\2\60.\3\2\2\2\60\61\3\2\2\2\61\63")
+        buf.write("\3\2\2\2\62\60\3\2\2\2\63\64\5\n\6\2\64\r\3\2\2\2\65\66")
+        buf.write("\7\23\2\2\668\7\t\2\2\67\65\3\2\2\2\678\3\2\2\289\3\2")
+        buf.write("\2\29:\7\23\2\2:<\7\13\2\2;=\5\f\7\2<;\3\2\2\2<=\3\2\2")
+        buf.write("\2=>\3\2\2\2>?\7\f\2\2?@\5\4\3\2@\17\3\2\2\2\7\25\27\60")
+        buf.write("\67<")
         return buf.getvalue()
 
 
@@ -50,13 +49,13 @@ class HookInterpreterParser ( Parser ):
 
     literalNames = [ "<INVALID>", "','", "<INVALID>", "<INVALID>", "<INVALID>", 
                      "'Declare'", "'Include'", "'.'", "'..'", "'('", "')'", 
-                     "'\"'", "'='", "';'" ]
+                     "'<'", "'>'", "<INVALID>", "'='", "';'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "Whitespace", "BlockComment", 
                       "LineComment", "Declare", "Include", "Dot", "DoubleDot", 
-                      "OpenParanthesis", "CloseParanthesis", "DoubleQuotes", 
-                      "Equals", "End", "NewLine", "Digits", "Name", "Identifier", 
-                      "FreeText" ]
+                      "OpenParanthesis", "CloseParanthesis", "OpenAngleBrackets", 
+                      "CloseAngleBrackets", "FreeText", "Equals", "End", 
+                      "NewLine", "Identifier", "Digits" ]
 
     RULE_primaryExpression = 0
     RULE_sentenceEnding = 1
@@ -80,14 +79,14 @@ class HookInterpreterParser ( Parser ):
     DoubleDot=8
     OpenParanthesis=9
     CloseParanthesis=10
-    DoubleQuotes=11
-    Equals=12
-    End=13
-    NewLine=14
-    Digits=15
-    Name=16
+    OpenAngleBrackets=11
+    CloseAngleBrackets=12
+    FreeText=13
+    Equals=14
+    End=15
+    NewLine=16
     Identifier=17
-    FreeText=18
+    Digits=18
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -215,6 +214,9 @@ class HookInterpreterParser ( Parser ):
         def NewLine(self):
             return self.getToken(HookInterpreterParser.NewLine, 0)
 
+        def EOF(self):
+            return self.getToken(HookInterpreterParser.EOF, 0)
+
         def getRuleIndex(self):
             return HookInterpreterParser.RULE_sentenceEnding
 
@@ -238,7 +240,7 @@ class HookInterpreterParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 23
             _la = self._input.LA(1)
-            if not(_la==HookInterpreterParser.End or _la==HookInterpreterParser.NewLine):
+            if not(((((_la - -1)) & ~0x3f) == 0 and ((1 << (_la - -1)) & ((1 << (HookInterpreterParser.EOF - -1)) | (1 << (HookInterpreterParser.End - -1)) | (1 << (HookInterpreterParser.NewLine - -1)))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -261,11 +263,8 @@ class HookInterpreterParser ( Parser ):
         def Include(self):
             return self.getToken(HookInterpreterParser.Include, 0)
 
-        def DoubleQuotes(self, i:int=None):
-            if i is None:
-                return self.getTokens(HookInterpreterParser.DoubleQuotes)
-            else:
-                return self.getToken(HookInterpreterParser.DoubleQuotes, i)
+        def OpenAngleBrackets(self):
+            return self.getToken(HookInterpreterParser.OpenAngleBrackets, 0)
 
         def Identifier(self, i:int=None):
             if i is None:
@@ -275,6 +274,9 @@ class HookInterpreterParser ( Parser ):
 
         def Dot(self):
             return self.getToken(HookInterpreterParser.Dot, 0)
+
+        def CloseAngleBrackets(self):
+            return self.getToken(HookInterpreterParser.CloseAngleBrackets, 0)
 
         def sentenceEnding(self):
             return self.getTypedRuleContext(HookInterpreterParser.SentenceEndingContext,0)
@@ -303,7 +305,7 @@ class HookInterpreterParser ( Parser ):
             self.state = 25
             self.match(HookInterpreterParser.Include)
             self.state = 26
-            self.match(HookInterpreterParser.DoubleQuotes)
+            self.match(HookInterpreterParser.OpenAngleBrackets)
             self.state = 27
             self.match(HookInterpreterParser.Identifier)
             self.state = 28
@@ -311,7 +313,7 @@ class HookInterpreterParser ( Parser ):
             self.state = 29
             self.match(HookInterpreterParser.Identifier)
             self.state = 30
-            self.match(HookInterpreterParser.DoubleQuotes)
+            self.match(HookInterpreterParser.CloseAngleBrackets)
             self.state = 31
             self.sentenceEnding()
         except RecognitionException as re:
@@ -393,12 +395,6 @@ class HookInterpreterParser ( Parser ):
         def Identifier(self):
             return self.getToken(HookInterpreterParser.Identifier, 0)
 
-        def DoubleQuotes(self, i:int=None):
-            if i is None:
-                return self.getTokens(HookInterpreterParser.DoubleQuotes)
-            else:
-                return self.getToken(HookInterpreterParser.DoubleQuotes, i)
-
         def FreeText(self):
             return self.getToken(HookInterpreterParser.FreeText, 0)
 
@@ -423,32 +419,16 @@ class HookInterpreterParser ( Parser ):
 
         localctx = HookInterpreterParser.ArgumentContext(self, self._ctx, self.state)
         self.enterRule(localctx, 8, self.RULE_argument)
+        self._la = 0 # Token type
         try:
-            self.state = 44
-            self._errHandler.sync(self)
-            token = self._input.LA(1)
-            if token in [HookInterpreterParser.Identifier]:
-                self.enterOuterAlt(localctx, 1)
-                self.state = 39
-                self.match(HookInterpreterParser.Identifier)
-                pass
-            elif token in [HookInterpreterParser.DoubleQuotes]:
-                self.enterOuterAlt(localctx, 2)
-                self.state = 40
-                self.match(HookInterpreterParser.DoubleQuotes)
-                self.state = 41
-                self.match(HookInterpreterParser.FreeText)
-                self.state = 42
-                self.match(HookInterpreterParser.DoubleQuotes)
-                pass
-            elif token in [HookInterpreterParser.Digits]:
-                self.enterOuterAlt(localctx, 3)
-                self.state = 43
-                self.match(HookInterpreterParser.Digits)
-                pass
+            self.enterOuterAlt(localctx, 1)
+            self.state = 39
+            _la = self._input.LA(1)
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << HookInterpreterParser.FreeText) | (1 << HookInterpreterParser.Identifier) | (1 << HookInterpreterParser.Digits))) != 0)):
+                self._errHandler.recoverInline(self)
             else:
-                raise NoViableAltException(self)
-
+                self._errHandler.reportMatch(self)
+                self.consume()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -491,20 +471,20 @@ class HookInterpreterParser ( Parser ):
         self.enterRule(localctx, 10, self.RULE_arguments)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 51
+            self.state = 46
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,2,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 46
+                    self.state = 41
                     self.argument()
-                    self.state = 47
+                    self.state = 42
                     self.match(HookInterpreterParser.T__0) 
-                self.state = 53
+                self.state = 48
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,2,self._ctx)
 
-            self.state = 54
+            self.state = 49
             self.argument()
         except RecognitionException as re:
             localctx.exception = re
@@ -565,31 +545,31 @@ class HookInterpreterParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 58
+            self.state = 53
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,4,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,3,self._ctx)
             if la_ == 1:
-                self.state = 56
+                self.state = 51
                 self.match(HookInterpreterParser.Identifier)
-                self.state = 57
+                self.state = 52
                 self.match(HookInterpreterParser.Dot)
 
 
-            self.state = 60
+            self.state = 55
             self.match(HookInterpreterParser.Identifier)
-            self.state = 61
+            self.state = 56
             self.match(HookInterpreterParser.OpenParanthesis)
-            self.state = 63
+            self.state = 58
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << HookInterpreterParser.DoubleQuotes) | (1 << HookInterpreterParser.Digits) | (1 << HookInterpreterParser.Identifier))) != 0):
-                self.state = 62
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << HookInterpreterParser.FreeText) | (1 << HookInterpreterParser.Identifier) | (1 << HookInterpreterParser.Digits))) != 0):
+                self.state = 57
                 self.arguments()
 
 
-            self.state = 65
+            self.state = 60
             self.match(HookInterpreterParser.CloseParanthesis)
-            self.state = 66
+            self.state = 61
             self.sentenceEnding()
         except RecognitionException as re:
             localctx.exception = re

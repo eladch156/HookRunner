@@ -1,2 +1,3 @@
-Include "TestLib.RandomMakeAndPrint" 
+Include <TestLib.RandomMakeAndPrint>
 Declare My_Spec_Var_1234 = "Hello, World"
+RandomMakeAndPrint()

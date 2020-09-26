@@ -1,19 +1,27 @@
 from App.Logger import Logger
 from antlr4 import *
 from antlr4.tree.Tree import TerminalNodeImpl
-from Hook.Step import StepBase,StepInclude,StepDeclVar,StepType
+from Hook.Step import StepBase,StepInclude,StepDeclVar,StepType,StepRunCommand
 from Interpreter.HookInterpreterLexer import HookInterpreterLexer
 from Interpreter.HookInterpreterListener import HookInterpreterListener
 from Interpreter.HookInterpreterParser import HookInterpreterParser
 import logging
 from typing import List
+from io import StringIO
 StepList = List[StepBase]
+
+def readArguments(argList):
+    _argsTextList = []
+    for arg in argList:
+        _argsTextList.append(arg.getText())
+    return _argsTextList
 
 class MainInterpreterListener(HookInterpreterListener):
     def __init__(self):
         HookInterpreterListener.__init__(self)
         self._logger = Logger("Interpreter","Listener")
         self._steps = []
+        self._out = StringIO()
     
     def getSteps(self):
         return self._steps
@@ -38,7 +46,7 @@ class MainInterpreterListener(HookInterpreterListener):
 
     # Enter a parse tree produced by HookInterpreterParser#variableDeclare.
     def enterVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
-        self._steps.append(StepDeclVar(ctx.Identifier(),ctx.FreeText()))
+        self._steps.append(StepDeclVar(ctx.Identifier().getText(),ctx.FreeText().getText()[1:-1]))
         self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
 
     # Exit a parse tree produced by HookInterpreterParser#variableDeclare.
@@ -48,7 +56,7 @@ class MainInterpreterListener(HookInterpreterListener):
 
     # Enter a parse tree produced by HookInterpreterParser#includeSentence.
     def enterIncludeSentence(self, ctx:HookInterpreterParser.IncludeSentenceContext):
-        self._steps.append(StepInclude(ctx.Identifier(0),ctx.Identifier(1)))
+        self._steps.append(StepInclude(ctx.Identifier(0).getText(),ctx.Identifier(1).getText()))
         self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
 
 
@@ -77,7 +85,9 @@ class MainInterpreterListener(HookInterpreterListener):
 
     # Enter a parse tree produced by HookInterpreterParser#functionCall.
     def enterFunctionCall(self, ctx:HookInterpreterParser.FunctionCallContext):
-        pass
+        args = [] if ctx.arguments() is None else readArguments(ctx.arguments().argument())
+        self._steps.append(StepRunCommand(*args,name=ctx.Identifier(0).getText(),pipe=self._out))
+        self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
 
     # Exit a parse tree produced by HookInterpreterParser#functionCall.
     def exitFunctionCall(self, ctx:HookInterpreterParser.FunctionCallContext):

@@ -1,4 +1,0 @@
-<Library LibFile="C:\Users\Elad\Projects\HookRunner\Resources\CLibs\LibTestCommand.dll">
-    <Function Name='RandomMakeAndPrint' Return="void"> 
-    </Function>
-</Library>

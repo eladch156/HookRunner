@@ -4,8 +4,8 @@
   "description": "HookRunner Web Client JS",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode development && copy /Y .\\dist\\index.html ..\\Application\\templates\\index.html && copy /Y .\\dist\\bundle.js ..\\Application\\static\\bundle.js && %SystemRoot%\\system32\\WindowsPowerShell\\v1.0\\powershell.exe .\\ReplaceForFlask.ps1 ..\\Application\\templates\\index.html",
-    "build": "webpack --mode production && copy /Y .\\dist\\index.html ..\\Application\\templates\\index.html && copy /Y .\\dist\\bundle.js ..\\Application\\static\\bundle.js && %SystemRoot%\\system32\\WindowsPowerShell\\v1.0\\powershell.exe .\\ReplaceForFlask.ps1 ..\\Application\\templates\\index.html",
+    "dev": "webpack --mode development && copy /Y .\\dist\\index.html ..\\templates\\index.html && copy /Y .\\dist\\bundle.js ..\\static\\bundle.js && %SystemRoot%\\system32\\WindowsPowerShell\\v1.0\\powershell.exe .\\ReplaceForFlask.ps1 ..\\templates\\index.html",
+    "build": "webpack --mode production && copy /Y .\\dist\\index.html ..\\templates\\index.html && copy /Y .\\dist\\bundle.js ..\\static\\bundle.js && %SystemRoot%\\system32\\WindowsPowerShell\\v1.0\\powershell.exe .\\ReplaceForFlask.ps1 ..\\templates\\index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
