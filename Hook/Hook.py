@@ -1,7 +1,7 @@
 from App.Logger import Logger
 from antlr4 import *
 from antlr4.tree.Tree import TerminalNodeImpl
-from Hook.Step import StepBase,StepInclude,StepDeclVar,StepType,StepRunCommand
+from Hook.Step import StepBase,StepInclude,StepDeclVar,StepType,StepRunCommand,StepsData
 from Interpreter.HookInterpreterLexer import HookInterpreterLexer
 from Interpreter.HookInterpreterListener import HookInterpreterListener
 from Interpreter.HookInterpreterParser import HookInterpreterParser
@@ -22,6 +22,7 @@ class MainInterpreterListener(HookInterpreterListener):
         self._logger = Logger("Interpreter","Listener")
         self._steps = []
         self._out = StringIO()
+        self._err = StringIO()
     
     def getSteps(self):
         return self._steps
@@ -86,7 +87,7 @@ class MainInterpreterListener(HookInterpreterListener):
     # Enter a parse tree produced by HookInterpreterParser#functionCall.
     def enterFunctionCall(self, ctx:HookInterpreterParser.FunctionCallContext):
         args = [] if ctx.arguments() is None else readArguments(ctx.arguments().argument())
-        self._steps.append(StepRunCommand(*args,name=ctx.Identifier(0).getText(),pipe=self._out))
+        self._steps.append(StepRunCommand(*args,name=ctx.Identifier(0).getText(),oPipe=self._out,ePipe=self._err))
         self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
 
     # Exit a parse tree produced by HookInterpreterParser#functionCall.
@@ -103,7 +104,9 @@ def getStepDescription(name):
 
 def execute(steps: StepList):
     _logger = Logger("Hook","Execute","Main")
+    _data = StepsData()
     for _step in steps:
+        _step.setStepsData(_data)
         _logger.log(logging.INFO,"Found step: {}",_step.what())
         _step.run()
 

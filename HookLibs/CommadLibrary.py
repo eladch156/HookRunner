@@ -83,13 +83,10 @@ class ApiCommand():
         self._argsTypeList.append(arg)
     def load(self):
         try:
-            self._function = getLibCmd(loadLibraryFile(self._libPath), self._funcName, self._retType, self._argsTypeList)
-            return True
+            return getLibCmd(loadLibraryFile(self._libPath), self._funcName, self._retType, self._argsTypeList)
         except Exception as ex:
             self._logger.log(logging.ERROR,str(ex))
-            return False
-    def run(self, *args):
-        return self._function(*args)
+            return None
     def __str__(self):
         return "Library={},Function={} {}({})".format(self._libPath,self._retType,self._funcName,",".join(self._argsTypeList))
 

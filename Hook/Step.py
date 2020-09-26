@@ -14,7 +14,7 @@ class StepType(Enum):
     EXECUTE=3
     INCLUDE=4
 
-class StepsData(metaclass=Singleton):
+class StepsData():
     def __init__(self):
         self._storage = {
             "Variables" : {
@@ -33,14 +33,17 @@ class StepsData(metaclass=Singleton):
             pass
     def getFirstCommand(self, name):
         for pair in self._storage["LoadedCommands"]:
-            if pair[1] == name:
-                return pair
+            if pair[0] == name:
+                return pair[1]
         return None
        
 
 class StepBase():
     def __init__(self):
-        self._vars = StepsData()
+        self._vars = None
+        self._libSingleton = LibsSingleton()
+    def setStepsData(self,data):
+        self._vars = data
     def run(self):
         raise NotImplementedError
     def what(self):
@@ -50,12 +53,12 @@ class StepInclude(StepBase):
     def __init__(self, *args):
         StepBase.__init__(self)
         self._args = args
-        self._libSingleton = LibsSingleton()
     def run(self):
         if len(self._args) != 2:
             raise GeneralException(ErrorCodes.HOOK_INC_NOT_VALID,"Hook include must contain only two strings seperated by '.'.")
-        if self._libSingleton.loadCommand(self._args[0],self._args[1]):
-            self._vars[("LoadedCommands",)] = (self._args[0],self._args[1])
+        LoadedCommand = self._libSingleton.loadCommand(self._args[0],self._args[1])
+        if LoadedCommand is not None:
+            self._vars[("LoadedCommands",)] = (self._args[1],LoadedCommand)
             return True
         else:
             return False
@@ -67,14 +70,13 @@ class StepRunCommand(StepBase):
         StepBase.__init__(self)
         self._args = args 
         self._cmdName = kwargs["name"] if "name" in kwargs else None
-        self._outpipe = kwargs["pipe"] if "pipe" in kwargs else StringIO()
-        self._errPipe = StringIO()
-        self._libSingleton = LibsSingleton()
+        self._outpipe = kwargs["oPipe"] if "oPipe" in kwargs else StringIO()
+        self._errpipe = kwargs["ePipe"] if "ePipe" in kwargs else StringIO()
         self._logger = Logger("Step","RunCommand")
     def run(self):
-        with redirect_stdout(self._outpipe):
-            self._libSingleton[self._vars.getFirstCommand(self._cmdName)].run(*self._args)
-        self._logger.log(logging.INFO,"Command {} Result: Out='{}',Error='{}'.",self._cmdName,self._outpipe.getvalue(),self._errPipe.getvalue())
+        cmd = self._vars.getFirstCommand(self._cmdName)
+        cmd(*self._args)
+        self._logger.log(logging.INFO,"Command {} Result: Out='{}', Error='{}'",self._cmdName,self._outpipe.getvalue(),self._errpipe.getvalue())
         return True
     def what(self):
         return StepType.EXECUTE
