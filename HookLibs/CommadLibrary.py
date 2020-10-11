@@ -27,10 +27,15 @@ def strToCType(argType):
 
 
 def loadLibraryFile(libPath):
+    _type = "CDLL"
+    switch = {
+        "CDLL" : CDLL,
+        "WinDLL" : WinDLL
+    }
     try:
-        return WinDLL(libPath)
+        return switch[_type](libPath)
     except Exception as _:
-        return cdll.LoadLibrary(libPath)
+        return None
 
 def getLibCmd(lib, funcname, restype, argtypes):
     """Simplify wrapping ctypes functions"""

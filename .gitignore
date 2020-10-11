@@ -7,3 +7,5 @@ pyvenv.cfg
 */.antlr/*
 WebClient/Js/node_modules/
 WebClient/Js/package-lock.json
+Resources/LibrariesSourceRepository/*/.vs
+.git/

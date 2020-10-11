@@ -1,0 +1,4 @@
+<Library LibFile="C:\Users\Elad\Projects\HookRunner\Resources\LibrariesSourceRepository\ScriptIS\x64\Release\ScriptIS.dll">
+    <Function Name="ScriptIS_Test_LogRandomNumber" Return="void"> 
+    </Function>
+</Library>
