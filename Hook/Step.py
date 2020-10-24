@@ -6,6 +6,7 @@ from Utils.Exceptions import ErrorCodes,GeneralException
 from App.Logger import Logger
 from contextlib import redirect_stdout
 import logging
+from Utils.Operators import OperatorUtils
 
 class StepType(Enum):
     NONE=0
@@ -13,6 +14,12 @@ class StepType(Enum):
     VAR=2
     EXECUTE=3
     INCLUDE=4
+    ASSIGNMENT=5
+
+class AssignmentType(Enum):
+    FUNCTION=0
+    VALUE=1
+    VARIBLE=2
 
 class StepsData():
     def __init__(self):
@@ -36,7 +43,19 @@ class StepsData():
             if pair[0] == name:
                 return pair[1]
         return None
-       
+    def isVaribleExist(self, name):
+        for key in self._storage["Variables"]:
+            if key == name:
+                return True
+        return False
+    def getVaribleByUuid(self, uuid):
+        for key in self._storage["Variables"]:
+            if "ID" in self._storage["Variables"][key]:
+                if self._storage["Variables"][key]["ID"] == uuid:
+                    return key
+        return None
+    def __str__(self):
+        return "Variables = {} || Commands = {}".format(str(self._storage["Variables"]),str(self._storage["LoadedCommands"]))
 
 class StepBase():
     def __init__(self):
@@ -72,10 +91,14 @@ class StepRunCommand(StepBase):
         self._cmdName = kwargs["name"] if "name" in kwargs else None
         self._outpipe = kwargs["oPipe"] if "oPipe" in kwargs else StringIO()
         self._errpipe = kwargs["ePipe"] if "ePipe" in kwargs else StringIO()
+        self._uuid = kwargs["uuid"] if "uuid" in kwargs else None
         self._logger = Logger("Step","RunCommand")
     def run(self):
         cmd = self._vars.getFirstCommand(self._cmdName)
-        cmd(*self._args)
+        ret = cmd(*self._args)
+        if self._uuid is not None and ret is not None:
+            self._vars[("Variables",self._vars.getVaribleByUuid(self._uuid))]["Value"] = ret
+            self._logger.log(logging.INFO, "Command Return : Var = {}, Value = {}", self._vars.getVaribleByUuid(self._uuid), ret)
         self._logger.log(logging.INFO,"Command {} Result: Out='{}', Error='{}'",self._cmdName,self._outpipe.getvalue(),self._errpipe.getvalue())
         return True
     def what(self):
@@ -89,7 +112,44 @@ class StepDeclVar(StepBase):
         self._logger = Logger("Step","DeclareVarible")
     def run(self):
         self._logger.log(logging.INFO,"Store ({},{})".format(self._name,self._value))
-        self._vars[("Variables",self._name)] =  self._value
+        self._vars[("Variables",self._name)] =  {"Value" : self._value}
     def what(self):
         return StepType.VAR
 
+class StepAssignment(StepBase):
+    def __init__(self,name,value,valueType,op):
+        StepBase.__init__(self)
+        self._name = name
+        self._value = value
+        self._valueType = valueType
+        self._op = op
+    def run(self):
+        if self._valueType == AssignmentType.FUNCTION:
+            if self._vars.isVaribleExist(self._name):
+                self._vars[("Variables",self._name)]["ID"] = self._value
+                self._vars[("Variables",self._name)]["OP"] = self._op
+            else:
+                self._vars[("Variables",self._name)] = { "ID": self._value, "OP": self._op }
+        elif self._valueType == AssignmentType.VARIBLE:
+            if not self._vars.isVaribleExist(self._value):
+                #TODO: Error
+                pass
+            if self._vars.isVaribleExist(self._name):
+                self._vars[("Variables",self._name)]["Value"] = OperatorUtils.applyAssignmentOp(self._vars[("Variables",self._name)]["Value"],self._op, self._vars[("Variables",self._value)])
+            else:
+                if self._op == "=":
+                    self._vars[("Variables",self._name)] =  {"Value" : self._vars[("Variables",self._value)] }
+                else:
+                    #TODO: Error
+                    pass
+        elif self._valueType == AssignmentType.VALUE:
+            if self._vars.isVaribleExist(self._name):
+                self._vars[("Variables",self._name)]["Value"] = OperatorUtils.applyAssignmentOp(self._vars[("Variables",self._name)]["Value"],self._op,self._value)
+            else:
+                if self._op == "=":
+                    self._vars[("Variables",self._name)] =  {"Value" : self._value}
+                else:
+                    #TODO: Error
+                    pass
+    def what(self):
+        return StepType.ASSIGNMENT

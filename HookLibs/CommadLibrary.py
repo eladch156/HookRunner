@@ -22,6 +22,8 @@ def strToCType(argType):
         "int" : c_int,
         "float" : c_float,
         "double" : c_double,
+        "long" : c_long,
+        "long long": c_longlong,
         "void" : None
     }.get(argType, None)
 

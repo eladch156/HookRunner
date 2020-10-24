@@ -10,6 +10,7 @@ class ErrorCodes(Enum):
     COMMUNICATION_DB_ERROR=7
     NO_LIBRARY_BY_NAME=8
     NO_COMMAND_BY_NAME=9
+    ANTLR=10 
     
     def __int__(self):
        return self.value
@@ -21,3 +22,7 @@ class GeneralException(Exception):
         super().__init__(message)
     def __str__(self):
         return "{}({}) : {}".format(self._code.name,self._code.value,self._message)
+
+class AntlrExcption(GeneralException):
+    def __init__(self, subName, message):
+        super(AntlrExcption, self).__init__(ErrorCodes.ANTLR, "{}::{}".format(subName,message))

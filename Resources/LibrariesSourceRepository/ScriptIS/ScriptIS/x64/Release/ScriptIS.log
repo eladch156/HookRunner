@@ -1,0 +1,11 @@
+﻿  pch.cpp
+  Common.cpp
+  dllmain.cpp
+  LoggerIS.cpp
+  ScriptIS.cpp
+     Creating library C:\Users\Elad\Projects\HookRunner\Resources\LibrariesSourceRepository\ScriptIS\x64\Release\ScriptIS.lib and object C:\Users\Elad\Projects\HookRunner\Resources\LibrariesSourceRepository\ScriptIS\x64\Release\ScriptIS.exp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1910 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ScriptIS.vcxproj -> C:\Users\Elad\Projects\HookRunner\Resources\LibrariesSourceRepository\ScriptIS\x64\Release\ScriptIS.dll

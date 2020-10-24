@@ -1,13 +1,16 @@
 from App.Logger import Logger
 from antlr4 import *
 from antlr4.tree.Tree import TerminalNodeImpl
-from Hook.Step import StepBase,StepInclude,StepDeclVar,StepType,StepRunCommand,StepsData
+from Hook.Step import StepBase,StepInclude,StepDeclVar,StepType,StepRunCommand,StepsData,StepAssignment,AssignmentType
 from Interpreter.HookInterpreterLexer import HookInterpreterLexer
 from Interpreter.HookInterpreterListener import HookInterpreterListener
 from Interpreter.HookInterpreterParser import HookInterpreterParser
+from antlr4.error.ErrorListener import ErrorListener
+from uuid import uuid4
 import logging
 from typing import List
 from io import StringIO
+from Utils.Exceptions import AntlrExcption
 StepList = List[StepBase]
 
 def readArguments(argList):
@@ -35,59 +38,37 @@ class MainInterpreterListener(HookInterpreterListener):
     def exitPrimaryExpression(self, ctx:HookInterpreterParser.PrimaryExpressionContext):
         pass
 
-
-    # Enter a parse tree produced by HookInterpreterParser#sentenceEnding.
-    def enterSentenceEnding(self, ctx:HookInterpreterParser.SentenceEndingContext):
-        pass
-
-    # Exit a parse tree produced by HookInterpreterParser#sentenceEnding.
-    def exitSentenceEnding(self, ctx:HookInterpreterParser.SentenceEndingContext):
-        pass
-
-
-    # Enter a parse tree produced by HookInterpreterParser#variableDeclare.
-    def enterVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
-        self._steps.append(StepDeclVar(ctx.Identifier().getText(),ctx.FreeText().getText()[1:-1]))
-        self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
-
-    # Exit a parse tree produced by HookInterpreterParser#variableDeclare.
-    def exitVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
-        pass
-
-
     # Enter a parse tree produced by HookInterpreterParser#includeSentence.
     def enterIncludeSentence(self, ctx:HookInterpreterParser.IncludeSentenceContext):
         self._steps.append(StepInclude(ctx.Identifier(0).getText(),ctx.Identifier(1).getText()))
         self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
-
 
     # Exit a parse tree produced by HookInterpreterParser#includeSentence.
     def exitIncludeSentence(self, ctx:HookInterpreterParser.IncludeSentenceContext):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParser#argument.
-    def enterArgument(self, ctx:HookInterpreterParser.ArgumentContext):
+    # Enter a parse tree produced by HookInterpreterParser#value.
+    def enterValue(self, ctx:HookInterpreterParser.ValueContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParser#argument.
-    def exitArgument(self, ctx:HookInterpreterParser.ArgumentContext):
+    # Exit a parse tree produced by HookInterpreterParser#value.
+    def exitValue(self, ctx:HookInterpreterParser.ValueContext):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParser#arguments.
-    def enterArguments(self, ctx:HookInterpreterParser.ArgumentsContext):
+    # Enter a parse tree produced by HookInterpreterParser#values.
+    def enterValues(self, ctx:HookInterpreterParser.ValuesContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParser#arguments.
-    def exitArguments(self, ctx:HookInterpreterParser.ArgumentsContext):
+    # Exit a parse tree produced by HookInterpreterParser#values.
+    def exitValues(self, ctx:HookInterpreterParser.ValuesContext):
         pass
-
 
     # Enter a parse tree produced by HookInterpreterParser#functionCall.
     def enterFunctionCall(self, ctx:HookInterpreterParser.FunctionCallContext):
-        args = [] if ctx.arguments() is None else readArguments(ctx.arguments().argument())
-        self._steps.append(StepRunCommand(*args,name=ctx.Identifier(0).getText(),oPipe=self._out,ePipe=self._err))
+        args = [] if ctx.values() is None else readArguments(ctx.values())
+        self._steps.append(StepRunCommand(*args,name=ctx.Identifier(0).getText(),oPipe=self._out,ePipe=self._err,uuid=ctx.uuid if hasattr(ctx, "uuid") else None))
         self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
 
     # Exit a parse tree produced by HookInterpreterParser#functionCall.
@@ -95,6 +76,52 @@ class MainInterpreterListener(HookInterpreterListener):
         pass
 
 
+    # Enter a parse tree produced by HookInterpreterParser#assigmentWithOutDecl.
+    def enterAssigmentWithOutDecl(self, ctx:HookInterpreterParser.AssigmentWithOutDeclContext):
+        if not ctx.value(0).Identifier():
+            #TODO:Error 
+            pass
+        if hasattr(ctx, '_decl'):
+            if not ctx.AssigmentOpreator().getText() != "=":
+                #TODO:Error
+                pass
+            self._steps.append(StepDeclVar(ctx.value(0).getText(),ctx.value(1).getText()[1:-1]))
+            self._logger.log(logging.INFO,"Found step: {}",self._steps[-1].what())
+        if ctx.functionCall():
+            ctx.functionCall().uuid = uuid4()
+            self._steps.append(StepAssignment(ctx.value(0).getText(),ctx.functionCall().uuid,AssignmentType.FUNCTION,ctx.AssigmentOpreator().getText()))
+            self._logger.log(logging.INFO,"Found step: {},{}",self._steps[-1].what(),AssignmentType.FUNCTION)
+        elif ctx.value(1):
+            if ctx.value(1).Identifier():
+                self._steps.append(StepAssignment(ctx.value(0).getText(),ctx.value(1).getText(),AssignmentType.VARIBLE,ctx.AssigmentOpreator().getText()))
+                self._logger.log(logging.INFO,"Found step: {},{}",self._steps[-1].what(),AssignmentType.VARIBLE)
+            else:
+                self._steps.append(StepAssignment(ctx.value(0).getText(),ctx.value(1).getText(),AssignmentType.VALUE,ctx.AssigmentOpreator().getText()))
+                self._logger.log(logging.INFO,"Found step: {},{}",self._steps[-1].what(),AssignmentType.VALUE)
+
+    # Exit a parse tree produced by HookInterpreterParser#assigmentWithOutDecl.
+    def exitAssigmentWithOutDecl(self, ctx:HookInterpreterParser.AssigmentWithOutDeclContext):
+        pass
+
+
+    # Enter a parse tree produced by HookInterpreterParser#assigmentWithDecl.
+    def enterAssigmentWithDecl(self, ctx:HookInterpreterParser.AssigmentWithDeclContext):
+        ctx.assigmentWithOutDecl()._decl = True
+
+    # Exit a parse tree produced by HookInterpreterParser#assigmentWithDecl.
+    def exitAssigmentWithDecl(self, ctx:HookInterpreterParser.AssigmentWithDeclContext):
+        pass
+
+
+    # Enter a parse tree produced by HookInterpreterParser#multiAssingment.
+    def enterMultiAssingment(self, ctx:HookInterpreterParser.MultiAssingmentContext):
+        pass
+
+    # Exit a parse tree produced by HookInterpreterParser#multiAssingment.
+    def exitMultiAssingment(self, ctx:HookInterpreterParser.MultiAssingmentContext):
+        pass
+
+#TODO: Make it work....
 def getStepDescription(name):
     switch = {
         StepType.INCLUDE: "Include library step.",
@@ -109,6 +136,7 @@ def execute(steps: StepList):
         _step.setStepsData(_data)
         _logger.log(logging.INFO,"Found step: {}",_step.what())
         _step.run()
+    _logger.log(logging.INFO, str(_data))
 
 def traverse(tree, rule_names, indent = 0):
     _logger = Logger("Hook","Execute","TreverseScript")
@@ -121,17 +149,37 @@ def traverse(tree, rule_names, indent = 0):
         for child in tree.children:
             traverse(child, rule_names, indent + 1)
 
+
+class HookRunnerErrorListener(ErrorListener):
+    def __init__(self):
+        super(HookRunnerErrorListener, self).__init__()
+    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+        raise AntlrExcption("SyntaxError","Symbol : {} , Line {}:{} => {}".format(offendingSymbol,line,column,msg))
+
+    def reportAmbiguity(self, recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs):
+        raise AntlrExcption("ReporterAmbiguity","")
+
+    def reportAttemptingFullContext(self, recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs):
+        raise AntlrExcption("ReporterAttemptingFullContext","Deterministic Finite Automata : {}, Start : {}, End: {}, Conflicting : {}, Configs : {}".format(dfa,startIndex,stopIndex,conflictingAlts,configs))
+
+    def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):
+        raise AntlrExcption("ReporterContextSensitivity","")
+
 def runHook(hookPath):
+    _logger = Logger("Hook","AST")
     _input = FileStream(hookPath)
     _lexer = HookInterpreterLexer(_input)
     _stream = CommonTokenStream(_lexer)
     _parser = HookInterpreterParser(_stream)
+    _parser.addErrorListener(DiagnosticErrorListener())
+    _parser.addErrorListener(HookRunnerErrorListener())
     _tree = _parser.primaryExpression()
     traverse(_tree,_parser.ruleNames)
     _listener = MainInterpreterListener()
     _walker = ParseTreeWalker()
     _walker.walk(_listener, _tree)
     execute(_listener.getSteps())
+
 
 
 

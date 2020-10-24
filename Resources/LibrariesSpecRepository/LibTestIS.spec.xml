@@ -1,4 +1,4 @@
 <Library LibFile="C:\Users\Elad\Projects\HookRunner\Resources\LibrariesSourceRepository\ScriptIS\x64\Release\ScriptIS.dll">
-    <Function Name="ScriptIS_Test_LogRandomNumber" Return="void"> 
+    <Function Name="ScriptIS_Uptime" Return="long long"> 
     </Function>
 </Library>

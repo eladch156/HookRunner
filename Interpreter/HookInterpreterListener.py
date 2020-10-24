@@ -17,12 +17,12 @@ class HookInterpreterListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParser#sentenceEnding.
-    def enterSentenceEnding(self, ctx:HookInterpreterParser.SentenceEndingContext):
+    # Enter a parse tree produced by HookInterpreterParser#ending.
+    def enterEnding(self, ctx:HookInterpreterParser.EndingContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParser#sentenceEnding.
-    def exitSentenceEnding(self, ctx:HookInterpreterParser.SentenceEndingContext):
+    # Exit a parse tree produced by HookInterpreterParser#ending.
+    def exitEnding(self, ctx:HookInterpreterParser.EndingContext):
         pass
 
 
@@ -35,30 +35,39 @@ class HookInterpreterListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParser#variableDeclare.
-    def enterVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
+    # Enter a parse tree produced by HookInterpreterParser#value.
+    def enterValue(self, ctx:HookInterpreterParser.ValueContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParser#variableDeclare.
-    def exitVariableDeclare(self, ctx:HookInterpreterParser.VariableDeclareContext):
-        pass
-
-
-    # Enter a parse tree produced by HookInterpreterParser#argument.
-    def enterArgument(self, ctx:HookInterpreterParser.ArgumentContext):
-        pass
-
-    # Exit a parse tree produced by HookInterpreterParser#argument.
-    def exitArgument(self, ctx:HookInterpreterParser.ArgumentContext):
+    # Exit a parse tree produced by HookInterpreterParser#value.
+    def exitValue(self, ctx:HookInterpreterParser.ValueContext):
         pass
 
 
-    # Enter a parse tree produced by HookInterpreterParser#arguments.
-    def enterArguments(self, ctx:HookInterpreterParser.ArgumentsContext):
+    # Enter a parse tree produced by HookInterpreterParser#multiAssingment.
+    def enterMultiAssingment(self, ctx:HookInterpreterParser.MultiAssingmentContext):
         pass
 
-    # Exit a parse tree produced by HookInterpreterParser#arguments.
-    def exitArguments(self, ctx:HookInterpreterParser.ArgumentsContext):
+    # Exit a parse tree produced by HookInterpreterParser#multiAssingment.
+    def exitMultiAssingment(self, ctx:HookInterpreterParser.MultiAssingmentContext):
+        pass
+
+
+    # Enter a parse tree produced by HookInterpreterParser#assigmentWithOutDecl.
+    def enterAssigmentWithOutDecl(self, ctx:HookInterpreterParser.AssigmentWithOutDeclContext):
+        pass
+
+    # Exit a parse tree produced by HookInterpreterParser#assigmentWithOutDecl.
+    def exitAssigmentWithOutDecl(self, ctx:HookInterpreterParser.AssigmentWithOutDeclContext):
+        pass
+
+
+    # Enter a parse tree produced by HookInterpreterParser#assigmentWithDecl.
+    def enterAssigmentWithDecl(self, ctx:HookInterpreterParser.AssigmentWithDeclContext):
+        pass
+
+    # Exit a parse tree produced by HookInterpreterParser#assigmentWithDecl.
+    def exitAssigmentWithDecl(self, ctx:HookInterpreterParser.AssigmentWithDeclContext):
         pass
 
 
@@ -68,6 +77,24 @@ class HookInterpreterListener(ParseTreeListener):
 
     # Exit a parse tree produced by HookInterpreterParser#functionCall.
     def exitFunctionCall(self, ctx:HookInterpreterParser.FunctionCallContext):
+        pass
+
+
+    # Enter a parse tree produced by HookInterpreterParser#singleFunctionCall.
+    def enterSingleFunctionCall(self, ctx:HookInterpreterParser.SingleFunctionCallContext):
+        pass
+
+    # Exit a parse tree produced by HookInterpreterParser#singleFunctionCall.
+    def exitSingleFunctionCall(self, ctx:HookInterpreterParser.SingleFunctionCallContext):
+        pass
+
+
+    # Enter a parse tree produced by HookInterpreterParser#values.
+    def enterValues(self, ctx:HookInterpreterParser.ValuesContext):
+        pass
+
+    # Exit a parse tree produced by HookInterpreterParser#values.
+    def exitValues(self, ctx:HookInterpreterParser.ValuesContext):
         pass
 
 

@@ -8,16 +8,20 @@
 #include <chrono>
 #include <boost/log/trivial.hpp>
 #include <errno.h>
+#include <Windows.h>
+#include <chrono>
 
 constexpr std::size_t MAX_LOG_LINE_SIZE = 2048;
 constexpr std::size_t MAX_ERRNO_SIZE = 256;
 
-void ScriptIS_Test_LogRandomNumber() {
+long long ScriptIS_Uptime() {
 	try {
-		ScriptIS_Log(LL_INFO, __func__ , "Random Number = %d.", rand() % 10 + 1);
+		auto uptime = std::chrono::milliseconds(GetTickCount64());
+		ScriptIS_Log(LL_INFO, __func__ , "Uptime = %lld.", uptime.count());
+		return uptime.count();
 	}
 	catch (const std::exception&) {
-		ScriptIS_Log(LL_ERROR, __func__, "%s", "Random number generation failed.");
+		ScriptIS_Log(LL_ERROR, __func__, "%s", "Cannot get uptime.");
 	}
 }
 

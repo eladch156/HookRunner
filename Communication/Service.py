@@ -5,7 +5,8 @@ from Communication.Actions import Action
 from App.Logger import Logger
 import logging
 from json import loads
-from Communication.PortSupplier import PortSupplier
+from Utils.Exceptions import AntlrExcption
+from Env.EnvSingleton import Environment
 
 TASK_QUEUE = Queue()
 BUFFER_SIZE = 8192
@@ -21,7 +22,10 @@ def _handleTasks():
                 break
             else:
                 continue
-        action.run()
+        try:
+            action.run()
+        except AntlrExcption as ex:
+            _logger.log(logging.ERROR,str(ex))
         _logger.log(logging.INFO,"Task is done...")
         TASK_QUEUE.task_done()
         _logger.log(logging.INFO,"Waiting for the next task...")
@@ -63,9 +67,8 @@ class Service(asyncore.dispatcher):
         self._logger = Logger("Service","Dispatcher")
         self.create_socket()
         self.set_reuse_addr()
-        self.bind((host,0))
-        self._portSupplier = PortSupplier(self.socket.getsockname()[1])
-        self._portSupplier.save()
+        self._env = Environment()
+        self.bind((host,int(self._env["port"])))
         self.listen(5)
     def handle_close(self):
         self._logger.log(logging.DEBUG,"Client: Connection Closed") 

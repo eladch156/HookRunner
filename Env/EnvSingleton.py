@@ -15,8 +15,12 @@ class Environment(metaclass=Singleton):
             raise GeneralException(ErrorCodes.CONFIG_FILE_DOESNT_EXIST,"Configuration file doesn't exist.")
         if "General" not in self._configParser:
             raise GeneralException(ErrorCodes.CONFIG_FILE_INCORRECT_STRUCTURE,"Missing 'General' Section.")
+        if "Communication" not in self._configParser:
+            raise GeneralException(ErrorCodes.CONFIG_FILE_INCORRECT_STRUCTURE,"Missing 'General' Section.")
         for key in self._configParser["General"]:
             self._hash[key] = self._configParser["General"][key]
+        for key in self._configParser["Communication"]:
+            self._hash[key] = self._configParser["Communication"][key]
     def __getitem__(self, key):
         return self._hash[key] if key in self._hash else None
     def __setitem__(self, key, value):

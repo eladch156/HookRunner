@@ -1,3 +1,4 @@
-Include <LibTestIS.ScriptIS_Test_LogRandomNumber>
-Declare My_Spec_Var_1234 = "Hello, World"
-ScriptIS_Test_LogRandomNumber()
+Include <LibTestIS.ScriptIS_Uptime>
+Declare Hello_World = "Hello, World", Hello_World_2 = "Hello, World 2", Computer_Uptime = 9
+Computer_Uptime = ScriptIS_Uptime()
+Hello_World_2 = Hello_World
