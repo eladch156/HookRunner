@@ -2,26 +2,29 @@ from Env.ArgReader import ArgReader
 from Env.EnvSingleton import Environment
 from App.Logger import Logger
 from HookLibs.CommadLibrary import LibsSingleton
-import logging
 from Communication.Service import ServiceThread
 import asyncore
 
+
 class Application():
     def __init__(self):
-        self._enviorment = Environment()
-        self._argReader = ArgReader()
-        self._argReader.parse()
-        self._enviorment.readFromFile()
-    def run(self): 
-        self._libSpecReader = LibsSingleton()
-        self._logger = Logger("Application")
-        self._logger.log(logging.INFO,"HookRunner is running.")
-        self._libSpecReader.init()
-        self._service = ServiceThread('localhost')
-        self._service.start()
-        self._logger.log(logging.INFO, "Server is ready...")
-        self._logger.log(logging.DEBUG, "Is ServerThread alive? {status}".format(status=str(self._service.is_alive())))
-        self._logger.log(logging.INFO,"On any input server will close.")
-        dummy = input()
-        self._service.stop()
+        self.__enviorment = Environment()
+        self.__arg_reader = ArgReader()
+        self.__arg_reader.parse()
+        self.__enviorment.read()
 
+    def run(self):
+        self.__lib_spec_reader = LibsSingleton()
+        self.__logger = Logger("Application")
+        self.__logger.log("Info", "HookRunner is running.")
+        self.__lib_spec_reader.init()
+        self.__service = ServiceThread('localhost')
+        self.__service.start()
+        self.__logger.log("Info", "Server is ready...")
+        self.__logger.log("Info",
+                          "Is ServerThread alive?"
+                          " {status}".format(status=str(
+                                    self.__service.is_alive())))
+        self.__logger.log("Info", "On any input server will close.")
+        dummy = input()
+        self.__service.stop()

@@ -4,11 +4,11 @@ from pathlib import Path
 
 WIN_HOOK_RUNNER_TEMP_PATH = Path(os.getenv('APPDATA')) / "HookRunner"
 LINUX_HOOK_RUNNER_TEMP_PATH = Path("/var/log/HookRunner")
-HOOK_RUNNER_TEMP_PATH=None
+HOOK_RUNNER_TEMP_PATH = None
 
 if os.name == "nt":
     if not WIN_HOOK_RUNNER_TEMP_PATH.exists():
-        WIN_HOOK_RUNNER_TEMP_PATH.mkdir() 
+        WIN_HOOK_RUNNER_TEMP_PATH.mkdir()
     HOOK_RUNNER_TEMP_PATH = WIN_HOOK_RUNNER_TEMP_PATH
 elif os.name == "posix":
     if not LINUX_HOOK_RUNNER_TEMP_PATH.exists():
@@ -17,23 +17,18 @@ elif os.name == "posix":
 else:
     raise OSError
 
+
 class LogUtils():
-    
     @classmethod
-    def strToLogLevel(cls, strLevel):
+    def str_to_log_level(cls, str_level):
         switch = {
-            "Debug" : logging.DEBUG,
-            "Info" : logging.INFO,
-            "Warning" : logging.WARNING,
-            "Error" : logging.ERROR
+            "Debug": logging.DEBUG,
+            "Info": logging.INFO,
+            "Warning": logging.WARNING,
+            "Error": logging.ERROR
         }
-        return logging.INFO if strLevel not in switch else switch[strLevel]
+        return switch.get(str_level, logging.INFO)
 
     @classmethod
-    def getLogFileByOs(cls):
+    def get_log_file_by_os(cls):
         return (HOOK_RUNNER_TEMP_PATH / "HookRunner.log")
-
-class ComUtils():
-    @classmethod
-    def getComDbFileByOs(cls):
-        return (HOOK_RUNNER_TEMP_PATH / "HookRunnerComm.db")

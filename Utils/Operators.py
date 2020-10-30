@@ -1,6 +1,6 @@
 class OperatorUtils():
     @classmethod
-    def applyAssignmentOp(cls, left, op, right):
+    def apply_assignment_op(cls, left, op, right):
         if op == "=":
             return right
         elif op == "*=":

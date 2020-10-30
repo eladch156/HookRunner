@@ -4,26 +4,28 @@ from Utils.Exceptions import ErrorCodes
 import traceback
 import os
 
-def isOsSupported():
+
+def _is_os_supported():
     if os.name == "nt" or os.name == "posix":
         return
     else:
         raise OSError()
 
+
 def main():
     try:
-        isOsSupported
-        app = Application()
-        app.run()
-    except GeneralException as gError:
-        print(str(gError))
-        exit(gError._code.value)
-    except Exception as Error:
+        _is_os_supported
+        _app = Application()
+        _app.run()
+    except GeneralException as general_error:
+        print(str(general_error))
+        exit(general_error._code.value)
+    except Exception as _:
         traceback.print_exc()
         exit(int(ErrorCodes.INTERNAL_ERROR))
     finally:
         pass
 
+
 if __name__ == "__main__":
     main()
-    
