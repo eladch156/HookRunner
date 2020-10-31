@@ -3,15 +3,17 @@ from Env.EnvSingleton import Environment
 from App.Logger import Logger
 from HookLibs.CommadLibrary import LibsSingleton
 from Communication.Service import ServiceThread
-import asyncore
 
 
-class Application():
+class Application:
     def __init__(self):
-        self.__enviorment = Environment()
+        self.__environment = Environment()
         self.__arg_reader = ArgReader()
         self.__arg_reader.parse()
-        self.__enviorment.read()
+        self.__environment.read()
+        self.__lib_spec_reader = None
+        self.__logger = None
+        self.__service = None
 
     def run(self):
         self.__lib_spec_reader = LibsSingleton()
@@ -26,5 +28,5 @@ class Application():
                           " {status}".format(status=str(
                                     self.__service.is_alive())))
         self.__logger.log("Info", "On any input server will close.")
-        dummy = input()
+        input()
         self.__service.stop()

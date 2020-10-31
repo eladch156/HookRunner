@@ -1,4 +1,4 @@
 Include <LibTestIS.ScriptIS_Uptime>
-Declare Hello_World = "Hello, World", Hello_World_2 = "Hello, World 2", Computer_Uptime = 9
-Computer_Uptime = ScriptIS_Uptime()
+Declare Hello_World = "Hello, World", Hello_World_2 = "Hello, World 2"
+Declare Computer_Uptime = ScriptIS_Uptime()
 Hello_World_2 = Hello_World

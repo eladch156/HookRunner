@@ -89,8 +89,9 @@ class MainInterpreterListener(HookInterpreterListener):
                 # TODO:Error
                 pass
             if ctx.functionCall():
-                # TODO:Error
-                pass
+                _func_uuid = uuid4()
+                ctx.functionCall().uuid = _func_uuid
+                self.__steps.append(StepDeclVar(_name, "", _func_uuid))
             elif _value:
                 _value_as_id = ctx.value(1).Identifier()
                 _value_as_num = ctx.value(1).Digits()

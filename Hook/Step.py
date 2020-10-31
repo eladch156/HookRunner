@@ -132,16 +132,25 @@ class StepRunCommand(StepBase):
 
 
 class StepDeclVar(StepBase):
-    def __init__(self, name, value):
+    def __init__(self, name, value, uuid=None):
         super().__init__()
         self.__name = name
         self.__value = value
         self.__logger = Logger("Step", "DeclareVarible")
+        self.__uuid = uuid
 
     def run(self):
-        self.__logger.log("Info", "Store ({},'{}')".format(self.__name,
-                                                           self.__value))
-        self.vars[("Variables", self.__name)] = {"Value": self.__value}
+        if self.__uuid:
+            if self.vars.is_varible_exist(self.__name):
+                self.vars[("Variables", self.__name)]["ID"] = self.__uuid
+                self.vars[("Variables", self.__name)]["OP"] = "="
+            else:
+                self.vars[("Variables", self.__name)] = {"ID": self.__uuid,
+                                                         "OP": "="}
+        else:
+            self.__logger.log("Info", "Store ({},'{}')".format(self.__name,
+                                                               self.__value))
+            self.vars[("Variables", self.__name)] = {"Value": self.__value}
         return True
 
     def what(self):
@@ -173,11 +182,11 @@ class StepAssignment(StepBase):
                     OperatorUtils.apply_assignment_op(
                     self.vars[("Variables", self.__name)]["Value"],
                     self.__op,
-                    self.vars[("Variables", self.__value)])
+                    self.vars[("Variables", self.__value)]["Value"])
             else:
                 if self.__op == "=":
                     self.vars[("Variables", self.__name)] =\
-                        {"Value": self.vars[("Variables", self.__value)]}
+                        {"Value": self.vars[("Variables", self.__value)]["Value"]}
                 else:
                     # TODO: Error
                     return False
